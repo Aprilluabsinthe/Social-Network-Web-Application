@@ -2,7 +2,7 @@
 2) Name: Di Lu
 3) Homework: #1
 4) Andrew IDs of students that I consulted on this homework: None
-5) Andrew IDs of course staff that I consulted on this homework: None
+5) Andrew IDs of course staff that I consulted on this homework: Elena Gong
 6) Names of other people I consulted on this homework: None
 7) List of external sources I consulted when solving this homework:
     * https://www.dukelearntoprogram.com//course1/doc/#css
