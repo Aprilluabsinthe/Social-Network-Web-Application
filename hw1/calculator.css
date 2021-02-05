@@ -4,7 +4,8 @@ html{
 }
 /* non-root setting for title and body*/
 title{
-    font-size : 2rem
+    font-size : 2rem;
+    color : black;
 }
 /* the webpage is snow color, all items align to center*/
 body{
@@ -14,10 +15,13 @@ body{
     align-items: center;
     height: 100vh;
 }
+p{
+    font-size : 1rem;
+    color : darkgray;
+}
 /* center class for title formatting*/
 .center {
     text-align: center;
-    color: black;
 }
 /* style for mainboard of the calculator*/
 /* color is lavenderblush, with solid border and round corner*/
