@@ -9,6 +9,7 @@
     * https://www.w3schools.com/css/css_examples.asp
     * https://codepen.io/quentinre/pen/pEoqBK
     * https://www.coursera.org/learn/duke-programming-web/home/week/1
+    * https://www.youtube.com/watch?v=EuwzyB_FQNs&t=1611s
 
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
