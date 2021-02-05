@@ -9,6 +9,7 @@
     https://www.w3schools.com/css/css_examples.asp
     https://codepen.io/quentinre/pen/pEoqBK
     https://www.coursera.org/learn/duke-programming-web/home/week/1
+    https://www.w3schools.com/tags/tag_link.asp
     https://www.youtube.com/watch?v=EuwzyB_FQNs&t=1611s
     https://stackoverflow.com/questions/11918491/using-two-css-classes-on-one-element
     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
