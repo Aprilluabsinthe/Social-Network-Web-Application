@@ -11,6 +11,7 @@
     https://www.coursera.org/learn/duke-programming-web/home/week/1
     https://www.youtube.com/watch?v=EuwzyB_FQNs&t=1611s
     https://stackoverflow.com/questions/11918491/using-two-css-classes-on-one-element
+    https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this
