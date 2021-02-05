@@ -36,10 +36,19 @@ body{
     grid-gap: 10px;
     grid-auto-rows: minmax(100px, auto);
     grid-template-areas:
-            'one two three plus'
-            'four five six minus'
-            'seven eight nine times'
-            '. zero equals divides';
+            "one two three plus"
+            "four five six minus"
+            "seven eight nine times"
+            ". zero equals divides";
+}
+#calc-key-0{
+    grid-area: zero;
+}
+#calc-equals{
+    grid-area: equals;
+}
+#calc-divide{
+    grid-area: divides;
 }
 
 .number {
