@@ -16,16 +16,17 @@ body{
     color: black;
 }
 .area-mainboard {
-    border: 0.5rem solid gainsboro;
+    background-color: lavenderblush;
+    box-shadow: 0 0 1rem 0 darkslategrey;
+    border: 0.2rem solid midnightblue;
     border-radius: 0.5rem;
     padding: 1.5rem 0.75rem 1.5rem 0.75rem;
 }
 .area-display{
     font-size:calc(0.1rem * 6 * 6);
     text-align: right;
-    box-shadow: 0 0 1rem 0 darkslategrey;
-    background-color: lavenderblush;
-    color: darkslategrey;
+    background-color: snow;
+    border: 0.05rem solid midnightblue;
     width: 32rem;
     padding: 1.5rem 1.5rem;
     margin: 1.5rem 0 1.5rem 0
@@ -65,6 +66,10 @@ body{
     border-radius: 1.5rem;
     font-family: Verdana, Geneva, sans-serif;
 }
+.number:hover,
+.number:focus{
+    background-color: cornflowerblue;
+}
 .operator {
     font-size: 2.5rem;
     text-align: center;
@@ -79,4 +84,8 @@ body{
     padding: 0.75rem 2rem 0.75rem 2rem;
     border-radius: 1.5rem;
     font-family: Verdana, Geneva, sans-serif;
+}
+.operator:hover,
+.operator:focus{
+    background-color: crimson;
 }
