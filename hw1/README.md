@@ -5,13 +5,13 @@
 5) Andrew IDs of course staff that I consulted on this homework: Elena Gong
 6) Names of other people I consulted on this homework: None
 7) List of external sources I consulted when solving this homework:
-    * https://www.dukelearntoprogram.com//course1/doc/#css
-    * https://www.w3schools.com/css/css_examples.asp
-    * https://codepen.io/quentinre/pen/pEoqBK
-    * https://www.coursera.org/learn/duke-programming-web/home/week/1
-    * https://www.youtube.com/watch?v=EuwzyB_FQNs&t=1611s
-
+    https://www.dukelearntoprogram.com//course1/doc/#css
+    https://www.w3schools.com/css/css_examples.asp
+    https://codepen.io/quentinre/pen/pEoqBK
+    https://www.coursera.org/learn/duke-programming-web/home/week/1
+    https://www.youtube.com/watch?v=EuwzyB_FQNs&t=1611s
+    https://stackoverflow.com/questions/11918491/using-two-css-classes-on-one-element
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this
-homework assignment.
+homework assignment.    
