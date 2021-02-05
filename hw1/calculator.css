@@ -52,38 +52,30 @@ body{
     grid-area: divides;
 }
 
-.number {
-    font-size: 2.5rem;
-    text-align: center;
-    text-align-all: center;
-    vertical-align: middle;
-    display: grid;
-    box-shadow: 0 0 0.4rem 0 darkslategrey;
-    background-color: AliceBlue;
-    border: 0.1rem dashed CornflowerBlue;
-    margin: 0.5rem 0.75rem 0.5rem 0.75rem;
-    padding: 0.75rem 2rem 0.75rem 2rem;
-    border-radius: 1.5rem;
-    font-family: Verdana, Geneva, sans-serif;
-}
-.number:hover,
-.number:focus{
-    background-color: cornflowerblue;
-}
-.operator {
+.key {
     font-size: 2.5rem;
     text-align: center;
     text-align-all: center;
     vertical-align: middle;
     display: grid;
     box-shadow: 0 0 5px 0 darkslategrey;
-    color : Cornsilk;
-    background-color: Coral;
-    border: 0.1rem solid Crimson;
+    border: 0.1rem dashed CornflowerBlue;
     margin: 0.5rem 0.75rem 0.5rem 0.75rem;
     padding: 0.75rem 2rem 0.75rem 2rem;
     border-radius: 1.5rem;
     font-family: Verdana, Geneva, sans-serif;
+}
+
+.number {
+    background-color: AliceBlue;
+}
+.number:hover,
+.number:focus{
+    background-color: cornflowerblue;
+}
+
+.operator {
+    background-color: Coral;
 }
 .operator:hover,
 .operator:focus{
