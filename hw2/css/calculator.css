@@ -1,0 +1,103 @@
+/* root setting, basic font size is 0.6 rem*/
+html{
+    font-size : 0.6rem
+}
+/* non-root setting for title and body*/
+title{
+    font-size : 2rem;
+    color : black;
+}
+/* the webpage is snow color, all items align to center*/
+body{
+    display: flex;
+    background-color: snow;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+p{
+    font-size : 1rem;
+    color : darkgray;
+}
+/* center class for title formatting*/
+.center {
+    text-align: center;
+}
+/* style for mainboard of the calculator*/
+/* color is lavenderblush, with solid border and round corner*/
+.area-mainboard {
+    background-color: lavenderblush;
+    box-shadow: 0 0 1rem 0 darkslategrey;
+    border: 0.2rem solid midnightblue;
+    border-radius: 0.5rem;
+    padding: 1.5rem 0.75rem 1.5rem 0.75rem;
+}
+
+/* style for display area of the calculator*/
+/* color is snow, with solid border, about 4 time width of the button*/
+.area-display{
+    font-size:calc(0.1rem * 6 * 6);
+    text-align: right;
+    background-color: snow;
+    border: 0.05rem solid midnightblue;
+    width: 32rem;
+    padding: 1.5rem 1.5rem;
+    margin: 1.5rem 0 1.5rem 0
+}
+
+/* grid seeting for the buttons*/
+.area-calcboard{
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    grid-template-areas:
+            "one two three plus"
+            "four five six minus"
+            "seven eight nine times"
+            ". zero equals divides";
+}
+
+/* special location setting for 0,&equals,&divides*/
+#calc-key-0{
+    grid-area: zero;
+}
+#calc-equals{
+    grid-area: equals;
+}
+#calc-divide{
+    grid-area: divides;
+}
+
+/* general style settings for number and operation*/
+.key {
+    font-size: 2.5rem;
+    text-align: center;
+    text-align-all: center;
+    vertical-align: middle;
+    display: grid;
+    box-shadow: 0 0 5px 0 darkslategrey;
+    border: 0.1rem dashed CornflowerBlue;
+    margin: 0.5rem 0.75rem 0.5rem 0.75rem;
+    padding: 0.75rem 2rem 0.75rem 2rem;
+    border-radius: 1.5rem;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+/* specific setting for number, color and hover effects*/
+.number {
+    background-color: AliceBlue;
+}
+.number:hover,
+.number:focus{
+    background-color: cornflowerblue;
+}
+
+/* specific setting for operator, color and hover effects*/
+.operator {
+    background-color: Coral;
+}
+.operator:hover,
+.operator:focus{
+    background-color: crimson;
+}
