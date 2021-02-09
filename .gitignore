@@ -4,3 +4,9 @@ migrations
 .DS_Store
 venv
 my_env
+/.idea/aws.xml
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/dilu.iml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/modules.xml
