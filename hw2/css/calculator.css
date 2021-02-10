@@ -19,6 +19,10 @@ p{
     font-size : 1rem;
     color : darkgray;
 }
+label,td{
+    font-size : 0.5rem;
+    color : blue;
+    }
 /* center class for title formatting*/
 .center {
     text-align: center;
@@ -37,6 +41,7 @@ p{
 /* color is snow, with solid border, about 4 time width of the button*/
 .area-display{
     font-size:calc(0.1rem * 6 * 6);
+    color:darkblue;
     text-align: right;
     background-color: snow;
     border: 0.05rem solid midnightblue;
