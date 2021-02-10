@@ -44,9 +44,7 @@ function clear(){
 function calculate(op){
     let result = preCal();
     if(isNaN(result) || result === Infinity){
-        prevVal = 0;
-        prevOpr = '+';
-        newVal = 0;
+        clear();
         alert("Error: your input contains illegal /0, computation turns to " + result);
     }
     else{
