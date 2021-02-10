@@ -33,12 +33,19 @@ function reset(result,op,nv){
     prevVal = result;
     prevOpr = op;
     newVal = nv;
+    displayPara();
 }
 
 function clear(){
     prevVal = 0;
     prevOpr = '+';
     newVal = 0;
+    displayPara();
+}
+
+function displayPara(){
+    document.getElementById('prevval').value = parseInt(String(prevVal));
+    document.getElementById('prevop').value = prevOpr;
 }
 
 function calculate(op){
@@ -50,6 +57,7 @@ function calculate(op){
     else{
         let display = document.getElementById('calc-display');
         display.value = parseInt(String(result));
+        displayPara();
         reset(result,op,0);
     }
 }
@@ -62,6 +70,7 @@ function equals(){
     else{
         let display = document.getElementById('calc-display');
         display.value = display.value = parseInt(String(result));
+        displayPara();
     }
     clear();
 }
