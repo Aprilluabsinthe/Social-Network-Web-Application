@@ -29,9 +29,21 @@ function preCal(){
     //return result;
 }
 
+function reset(result,op,nv){
+    prevVal = result;
+    prevOpr = op;
+    newVal = nv;
+}
+
+function clear(){
+    prevVal = 0;
+    prevOpr = '+';
+    newVal = 0;
+}
+
 function calculate(op){
     let result = preCal();
-    if(isNaN(result) || result===Infinity){
+    if(isNaN(result) || result === Infinity){
         prevVal = 0;
         prevOpr = '+';
         newVal = 0;
@@ -39,30 +51,21 @@ function calculate(op){
     }
     else{
         let display = document.getElementById('calc-display');
-        prevVal = result;
-        prevOpr = op;
-        newVal = 0;
         display.value = parseInt(String(result));
+        reset(result,op,0);
     }
-
 }
 
-function equals(op){
+function equals(){
     let result = preCal();
     if( isNaN(result) || result===Infinity){
-        prevVal = 0;
-        prevOpr = '+';
-        newVal = 0;
         alert("Error: your input contains illegal /0, computation turns to " + result);
     }
     else{
         let display = document.getElementById('calc-display');
         display.value = display.value = parseInt(String(result));
-        prevVal = 0;
-        prevOpr = '+';
-        newVal = 0;
     }
-
+    clear();
 }
 
 
