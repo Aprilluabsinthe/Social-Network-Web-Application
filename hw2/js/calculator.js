@@ -10,6 +10,7 @@ function setNum(num){
 
 function preCal(){
     let result = 0;
+    let err = false;
     switch(prevOpr){
         case '+':
             result = prevVal + newVal;
@@ -24,26 +25,44 @@ function preCal(){
             result = prevVal / newVal;
             break;
     }
-    return parseInt(String(result));
+    return result;
     //return result;
 }
 
 function calculate(op){
     let result = preCal();
-    let display = document.getElementById('calc-display');
-    display.value = String(result);
-    prevVal = result;
-    prevOpr = op;
-    newVal = 0;
+    if(isNaN(result) || result===Infinity){
+        prevVal = 0;
+        prevOpr = '+';
+        newVal = 0;
+        alert("Error: your input contains illegal /0, computation turns to " + result);
+    }
+    else{
+        let display = document.getElementById('calc-display');
+        prevVal = result;
+        prevOpr = op;
+        newVal = 0;
+        display.value = parseInt(String(result));
+    }
+
 }
 
 function equals(op){
     let result = preCal();
-    let display = document.getElementById('calc-display');
-    display.value = String(result);
-    prevVal = 0;
-    prevOpr = '+';
-    newVal = 0;
+    if( isNaN(result) || result===Infinity){
+        prevVal = 0;
+        prevOpr = '+';
+        newVal = 0;
+        alert("Error: your input contains illegal /0, computation turns to " + result);
+    }
+    else{
+        let display = document.getElementById('calc-display');
+        display.value = display.value = parseInt(String(result));
+        prevVal = 0;
+        prevOpr = '+';
+        newVal = 0;
+    }
+
 }
 
 
