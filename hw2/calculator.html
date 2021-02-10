@@ -18,9 +18,25 @@
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
         <!-- the display part with number ZERO -->
-        <form>
-            <input class = "area-display" type="text" readonly="" id="calc-display" value="0">
-        </form>
+        <table>
+            <tr>
+                <td>Previous Value</td>
+                <td>Previous Operation</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" readonly="" id="prevval" value="0">
+                </td>
+                <td>
+                    <input type="text" readonly="" id="prevop" value="+">
+                </td>
+            </tr>
+            <tr>
+                <td>new Value</td>
+            </tr>
+        </table>
+        <input class = "area-display" type="text" readonly="" id="calc-display" value="0">
+
         <!-- the number and calculator part    -->
         <div class="area-calcboard">
             <button class="key number" id="calc-key-1" value=1 onclick="setNum(1)"> 1 </button>
