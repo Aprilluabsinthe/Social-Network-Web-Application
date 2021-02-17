@@ -17,43 +17,41 @@
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
         <!-- the display part with number ZERO -->
-        <table>
-            <tr>
-                <td>Previous Value</td>
-                <td>Previous Operation</td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" readonly="" id="prevval" value="0">
-                </td>
-                <td>
-                    <input type="text" readonly="" id="prevop" value="+">
-                </td>
-            </tr>
-            <tr>
-                <td>new Value</td>
-            </tr>
-        </table>
-        <input class = "area-display" type="text" readonly="" id="calc-display" value="0">
+        <form method="GET">
+            <p>prev_val<input type = "text" name="prev_val" value="{{prev_val}}"></p>
+            <p>prev_opr<input type = "text" name="prev_opr" value="{{prev_opr}}"></p>
+            <p>new_val<input type = "text" name="new_val" value="{{new_val}}"></p>
+        </form>
 
+        <form method="GET" >
+            <input class = "area-display" type="text" readonly="" id="calc-display" name="cal_result" value="{{cal_result}}">
+        </form>
+
+        <form method="POST">
         <!-- the number and calculator part    -->
-        <div class="area-calcboard">
-            <button class="key number" id="calc-key-1" value=1 onclick="setNum(1)"> 1 </button>
-            <button class="key number" id="calc-key-2" value=2 onclick="setNum(2)"> 2 </button>
-            <button class="key number" id="calc-key-3" value=3 onclick="setNum(3)"> 3 </button>
-            <button class="key operator" id="calc-plus" value='+' onclick="calculate('+')"> &plus; </button>
-            <button class="key number" id="calc-key-4" value=4 onclick="setNum(4)"> 4 </button>
-            <button class="key number" id="calc-key-5" value=5 onclick="setNum(5)"> 5 </button>
-            <button class="key number" id="calc-key-6" value=6 onclick="setNum(6)"> 6 </button>
-            <button class="key operator" id="calc-minus" value='-' onclick="calculate('-')"> &minus; </button>
-            <button class="key number" id="calc-key-7" value=7 onclick="setNum(7)"> 7 </button>
-            <button class="key number" id="calc-key-8" value=8 onclick="setNum(8)"> 8 </button>
-            <button class="key number" id="calc-key-9" value=9 onclick="setNum(9)"> 9 </button>
-            <button class="key operator" id="calc-times" value='*' onclick="calculate('*')"> &times; </button>
-            <button class="key number" id="calc-key-0" value=0 onclick="setNum(0)"> 0 </button>
-            <button class="key operator" id="calc-equals" onclick="equals()"> &equals; </button>
-            <button class="key operator" id="calc-divide" value='/' onclick="calculate('/')"> &divide; </button>
-        </div>
+        <p class="area-calcboard" type="submit" action="calculator" method="POST">
+            <button class="key number" id="calc-key-1" value="1" name="button" type="submit" > 1 </button>
+            <button class="key number" id="calc-key-2" value="2" name="button" type="submit"> 2 </button>
+            <button class="key number" id="calc-key-3" value="3" name="button" type="submit"> 3 </button>
+            <button class="key operator" id="calc-plus" value="plus" name="button" type="submit"> &plus; </button>
+            <button class="key number" id="calc-key-4" value="4" name="button" type="submit"> 4 </button>
+            <button class="key number" id="calc-key-5" value="5" name="button" type="submit"> 5 </button>
+            <button class="key number" id="calc-key-6" value="6" name="button" type="submit"> 6 </button>
+            <button class="key operator" id="calc-minus" value="minus" name="button" type="submit"> &minus; </button>
+            <button class="key number" id="calc-key-7" value="7" name="button" type="submit"> 7 </button>
+            <button class="key number" id="calc-key-8" value="8" name="button" type="submit"> 8 </button>
+            <button class="key number" id="calc-key-9" value="9" name="button" type="submit"> 9 </button>
+            <button class="key operator" id="calc-times" value="times" name="button" type="submit"> &times; </button>
+            <button class="key number" id="calc-key-0" value="0" name="button" type="submit"> 0 </button>
+            <button class="key operator" id="calc-equals" value="equals" name="button" type="submit"> &equals; </button>
+            <button class="key operator" id="calc-divide" value="divide" name="button" type="submit"> &divide; </button>
+            <p>
+                <input id="prev_val" type = "text" name="prev_val_post" value="{{prev_val}}">
+                <input id="prev_opr" type = "text" name="prev_opr_post" value="{{prev_opr}}">
+                <input id="new_val" type = "text" name="new_val_post" value="{{new_val}}">
+            </p>
+            {% csrf_token %}
+        </form>
     </div>
     <!--  additional paragraph  -->
     <p class="center">Andrew ID: dilu</p>
