@@ -85,6 +85,3 @@ def calculator(request):
             except ZeroDivisionError as error:
                 errors.append("ZeroDivisionError : Can not divide 0")
                 return render(request, 'calculator/calculator.html', {'errors':errors})
-    # errors.append("Error: Please click on Valid Buttons")
-    # context['errors'] = errors
-    # return render(request, 'calculator/calculator.html', {'errors': errors})
