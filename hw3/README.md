@@ -11,6 +11,7 @@
     * [Django Tutorial]https://www.youtube.com/watch?v=UmljXZIypDc
     * [Django skeleton]https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/skeleton_website
     * [Web calculator]https://medium.com/swlh/create-a-calculator-using-django-d2d5573dfe61
+    *[csrf token] https://owasp.org/www-community/attacks/csrf
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this
