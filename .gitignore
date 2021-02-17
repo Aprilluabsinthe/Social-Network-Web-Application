@@ -1,12 +1,25 @@
 *.pyc
+# Django's SQL Lite Database File
 db.sqlite3
 migrations
+# Mac OS data store file
 .DS_Store
 venv
 my_env
+/.idea
 /.idea/aws.xml
 /.idea/codeStyles/codeStyleConfig.xml
 /.idea/dilu.iml
 /.idea/vcs.xml
 /.idea/workspace.xml
 /.idea/modules.xml
+
+*.log
+*.pot
+local_settings.py
+
+# Editor backup files
+*~
+*#
+*.swp
+
