@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Di Lu's calculator by Django</title>
+    <!-- link to stylesheet -->
+    <link rel="stylesheet" type="text/css" href="/static/calculator/calculator.css">
+</head>
+
+<body>
+
+<!-- the container -->
+<div class="container" id = "mainboard">
+    <!-- the headline -->
+    <h1 class="center">Di Lu's calculator</h1>
+    <p class="center">Homework #1 for course 17-637 Web Application</p>
+    <!-- the main board for the calculator    -->
+    <div class="area-mainboard">
+        <!-- the display part with number ZERO -->
+        <table>
+            <tr>
+                <td>Previous Value</td>
+                <td>Previous Operation</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" readonly="" id="prevval" value="0">
+                </td>
+                <td>
+                    <input type="text" readonly="" id="prevop" value="+">
+                </td>
+            </tr>
+            <tr>
+                <td>new Value</td>
+            </tr>
+        </table>
+        <input class = "area-display" type="text" readonly="" id="calc-display" value="0">
+
+        <!-- the number and calculator part    -->
+        <div class="area-calcboard">
+            <button class="key number" id="calc-key-1" value=1 onclick="setNum(1)"> 1 </button>
+            <button class="key number" id="calc-key-2" value=2 onclick="setNum(2)"> 2 </button>
+            <button class="key number" id="calc-key-3" value=3 onclick="setNum(3)"> 3 </button>
+            <button class="key operator" id="calc-plus" value='+' onclick="calculate('+')"> &plus; </button>
+            <button class="key number" id="calc-key-4" value=4 onclick="setNum(4)"> 4 </button>
+            <button class="key number" id="calc-key-5" value=5 onclick="setNum(5)"> 5 </button>
+            <button class="key number" id="calc-key-6" value=6 onclick="setNum(6)"> 6 </button>
+            <button class="key operator" id="calc-minus" value='-' onclick="calculate('-')"> &minus; </button>
+            <button class="key number" id="calc-key-7" value=7 onclick="setNum(7)"> 7 </button>
+            <button class="key number" id="calc-key-8" value=8 onclick="setNum(8)"> 8 </button>
+            <button class="key number" id="calc-key-9" value=9 onclick="setNum(9)"> 9 </button>
+            <button class="key operator" id="calc-times" value='*' onclick="calculate('*')"> &times; </button>
+            <button class="key number" id="calc-key-0" value=0 onclick="setNum(0)"> 0 </button>
+            <button class="key operator" id="calc-equals" onclick="equals()"> &equals; </button>
+            <button class="key operator" id="calc-divide" value='/' onclick="calculate('/')"> &divide; </button>
+        </div>
+    </div>
+    <!--  additional paragraph  -->
+    <p class="center">Andrew ID: dilu</p>
+    <p class="center">Email: dilu@andrew.cmu.edu</p>
+</div>
+
+</body>
+</html>
