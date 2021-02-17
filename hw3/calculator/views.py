@@ -64,10 +64,8 @@ def calculator(request):
     new_val = request.session['new_val']
     if 'button' in request.GET:
         buttonvalue = request.GET['button']
-        if buttonvalue in ['0','1','2','3','4','5','6','7','8','9']:
+        if buttonvalue in [chr(x) for x in range(48,58)]:
             update_val = str(update(new_val,buttonvalue))
-            request.session['prev_opr'] = request.GET['prev_opr']
-            request.session['prev_val'] = request.GET['prev_val']
             request.session['new_val'] = update_val
             context['prev_opr'] = prev_opr
             context['prev_val'] = prev_val
@@ -85,6 +83,23 @@ def calculator(request):
                 cal_result = divide(prev_val, new_val)
             request.session['prev_opr'] = buttonvalue
             request.session['prev_val'] = str(cal_result)
+            request.session['new_val'] = '0'
+            context['prev_opr'] = request.session['prev_opr']
+            context['prev_val'] = request.session['prev_val']
+            context['new_val'] =  request.session['new_val']
+            context['cal_result'] = str(cal_result)
+            return render(request, 'calculator/calculator.html', context)
+        elif buttonvalue == 'equals':
+            if prev_opr == 'plus':
+                cal_result = plus(prev_val,new_val)
+            elif prev_opr == 'minus':
+                cal_result = minus(prev_val, new_val)
+            elif prev_opr == 'times':
+                cal_result = times(prev_val, new_val)
+            elif prev_opr == 'divide':
+                cal_result = divide(prev_val, new_val)
+            request.session['prev_opr'] = 'plus'
+            request.session['prev_val'] = '0'
             request.session['new_val'] = '0'
             context['prev_opr'] = request.session['prev_opr']
             context['prev_val'] = request.session['prev_val']
