@@ -34,30 +34,15 @@ def home_page(request):
     context['cal_result'] = '0'
     return render(request, 'calculator/calculator.html', context)
 
-# def do_calculation(request):
-#     context = {}
-#     if 'opr' in request.GET:
-#         if request.GET['opr'] == '+':
-#             prev_val = request.GET['calc_result']
-#             new_val = '0'
-#             context['prev_opr'] = '&/plus;'
-#             context['prev_val'] = request.GET['calc_result']
-#             context['new_val'] = '0'
-#             context['calc_result'] = plus(prev_val,new_val)
-#             return render(request,'calculator/calculator.html',context)
-#     return render(request, 'calculator/calculator.html', context)
-
-# def setNum(request):
-#     # if 'num' in request.POST:
-#     new_val = request.POST['button']
-#     context = {}
-#     context['prev_opr'] = '+'
-#     context['prev_val'] = '0'
-#     context['new_val'] = '0'
-#     context['cal_result'] = new_val
-#     return render(request, 'calculator/calculator.html', context)
 
 def calculator(request):
+    errors = []
+    if 'prev_opr' not in request.session:
+        errors.append("Error: Must Have Previous Operator")
+    if 'prev_val' not in request.session:
+        errors.append("Error: Must Have Previous Value")
+    if 'new_val' not in request.session:
+        errors.append("Error: Must Have New Value")
     context = {}
     prev_opr = request.session['prev_opr']
     prev_val = request.session['prev_val']
@@ -71,38 +56,35 @@ def calculator(request):
             context['prev_val'] = prev_val
             context['new_val'] = update_val
             context['cal_result'] = update_val
+            context['errors'] = errors
             return render(request, 'calculator/calculator.html', context)
-        elif buttonvalue in ['plus','minus','times','divide']:
-            if prev_opr == 'plus':
-                cal_result = plus(prev_val,new_val)
-            elif prev_opr == 'minus':
-                cal_result = minus(prev_val, new_val)
-            elif prev_opr == 'times':
-                cal_result = times(prev_val, new_val)
-            elif prev_opr == 'divide':
-                cal_result = divide(prev_val, new_val)
-            request.session['prev_opr'] = buttonvalue
-            request.session['prev_val'] = str(cal_result)
-            request.session['new_val'] = '0'
-            context['prev_opr'] = request.session['prev_opr']
-            context['prev_val'] = request.session['prev_val']
-            context['new_val'] =  request.session['new_val']
-            context['cal_result'] = str(cal_result)
-            return render(request, 'calculator/calculator.html', context)
-        elif buttonvalue == 'equals':
-            if prev_opr == 'plus':
-                cal_result = plus(prev_val,new_val)
-            elif prev_opr == 'minus':
-                cal_result = minus(prev_val, new_val)
-            elif prev_opr == 'times':
-                cal_result = times(prev_val, new_val)
-            elif prev_opr == 'divide':
-                cal_result = divide(prev_val, new_val)
-            request.session['prev_opr'] = 'plus'
-            request.session['prev_val'] = '0'
-            request.session['new_val'] = '0'
-            context['prev_opr'] = request.session['prev_opr']
-            context['prev_val'] = request.session['prev_val']
-            context['new_val'] =  request.session['new_val']
-            context['cal_result'] = str(cal_result)
-            return render(request, 'calculator/calculator.html', context)
+        else: # operations
+            try:
+                if prev_opr == 'plus':
+                    cal_result = plus(prev_val,new_val)
+                elif prev_opr == 'minus':
+                    cal_result = minus(prev_val, new_val)
+                elif prev_opr == 'times':
+                    cal_result = times(prev_val, new_val)
+                elif prev_opr == 'divide':
+                    cal_result = divide(prev_val, new_val)
+                if buttonvalue in ['plus', 'minus', 'times', 'divide']:
+                    request.session['prev_opr'] = buttonvalue
+                    request.session['prev_val'] = str(cal_result)
+                    request.session['new_val'] = '0'
+                else:
+                    request.session['prev_opr'] = 'plus'
+                    request.session['prev_val'] = '0'
+                    request.session['new_val'] = '0'
+                context['prev_opr'] = request.session['prev_opr']
+                context['prev_val'] = request.session['prev_val']
+                context['new_val'] =  request.session['new_val']
+                context['cal_result'] = str(cal_result)
+                context['errors'] = errors
+                return render(request, 'calculator/calculator.html', context)
+            except ZeroDivisionError as error:
+                errors.append("ZeroDivisionError : Can not divide 0")
+                return render(request, 'calculator/calculator.html', {'errors':errors})
+    errors.append("Error: Please click on Valid Buttons")
+    context['errors'] = errors
+    return render(request, 'calculator/calculator.html', {'errors': errors})

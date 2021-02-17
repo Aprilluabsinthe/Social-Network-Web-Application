@@ -9,6 +9,15 @@
 
 <body>
 
+{% for error in errors %}
+    <div class="error">
+        {{error}}
+    </div>
+    <div>
+    <a href="/calculator">home_page</a>
+</div>
+{% endfor %}
+
 <!-- the container -->
 <div class="container" id = "mainboard">
     <!-- the headline -->
@@ -47,9 +56,9 @@
                 <button class="key operator" id="calc-divide" value="divide" name="button" type="submit"> &divide; </button>
 
                 <p>
-                    <input id="prev_val" type = "text" name="prev_val" value="{{prev_val}}">
-                    <input id="prev_opr" type = "text" name="prev_opr" value="{{prev_opr}}">
-                    <input id="new_val" type = "text" name="new_val" value="{{new_val}}">
+                    <input id="prev_val" type = "hidden" name="prev_val" value="{{prev_val}}">
+                    <input id="prev_opr" type = "hidden" name="prev_opr" value="{{prev_opr}}">
+                    <input id="new_val" type = "hidden" name="new_val" value="{{new_val}}">
                 </p>
             </p>
             {% csrf_token %}
