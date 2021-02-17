@@ -27,6 +27,11 @@ label,td{
 .center {
     text-align: center;
 }
+.error{
+    font-size : 2.5rem;
+    color : darkred;
+    text-align: center;
+}
 /* style for mainboard of the calculator*/
 /* color is lavenderblush, with solid border and round corner*/
 .area-mainboard {
