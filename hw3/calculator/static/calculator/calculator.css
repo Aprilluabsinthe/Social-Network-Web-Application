@@ -79,15 +79,6 @@ label,td{
 #calc-divide{
     grid-area: divides;
 }
-/*#prev_val{*/
-/*    grid-area: prevval;*/
-/*}*/
-/*#prev_opr{*/
-/*    grid-area: prevop;*/
-/*}*/
-/*#new_val{*/
-/*    grid-area: newval;*/
-/*}*/
 
 /* general style settings for number and operation*/
 .key {
