@@ -29,7 +29,7 @@
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
         {#name="cal_result"#}
-        <form method=['GET','POST'] action="calculator">
+        <form method='GET' action="calculator">
             <input class = "area-display" type="text" readonly="" id="calc-display"  value="{{cal_result}}">
 
             <!-- the number and calculator part    -->
@@ -56,7 +56,7 @@
                     <input id="new_val" type = "hidden" name="new_val" value="{{new_val}}">
                 </div>
             </div>
-{#            {% csrf_token %}#}
+            {% csrf_token %}
         </form>
     </div>
     {% endif %}
