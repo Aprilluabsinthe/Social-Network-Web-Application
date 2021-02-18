@@ -18,7 +18,7 @@ from django.urls import path
 from calculator import views
 
 urlpatterns = [
-    path('', views.home_page),
+    path('', views.views.calculator),
     path('calculator',views.calculator),
     # path('display',views.display),
 ]
