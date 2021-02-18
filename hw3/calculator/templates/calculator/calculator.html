@@ -27,18 +27,11 @@
     <p class="center">Homework #3 for course 17-637 Web Application</p>
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
-        <!-- the display part with number ZERO -->
-        <form>
-            <p>prev_val<input type = "text" name="prev_val" value="{{prev_val}}"  method="GET"></p>
-            <p>prev_opr<input type = "text" name="prev_opr" value="{{prev_opr}}" method="GET"></p>
-            <p>new_val<input type = "text" name="new_val" value="{{new_val}}" method="GET"></p>
-        </form>
 
-        <form>
-            <input class = "area-display" type="text" readonly="" id="calc-display" name="cal_result"  method="GET" value="{{cal_result}}">
-        </form>
 
         <form  action="calculator">
+            <input class = "area-display" type="text" readonly="" id="calc-display" name="cal_result"  method="GET" value="{{cal_result}}">
+
             <!-- the number and calculator part    -->
             <p class="area-calcboard" method="POST">
                 <form><button class="key number" id="calc-key-1" value='1' name="button" type="submit"> 1 </button>{% csrf_token %}
