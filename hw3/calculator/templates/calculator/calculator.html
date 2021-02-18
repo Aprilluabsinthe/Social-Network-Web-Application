@@ -28,13 +28,12 @@
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
 
-
-        <form  action="calculator">
+        <form action="calculator">
             <input class = "area-display" type="text" readonly="" id="calc-display" name="cal_result"  method="GET" value="{{cal_result}}">
 
             <!-- the number and calculator part    -->
-            <p class="area-calcboard" method="POST">
-                <form><button class="key number" id="calc-key-1" value='1' name="button" type="submit"> 1 </button>{% csrf_token %}
+            <div class="area-calcboard" method="POST">
+                <button class="key number" id="calc-key-1" value='1' name="button" type="submit"> 1 </button>{% csrf_token %}
                 <button class="key number" id="calc-key-2" value='2' name="button" type="submit"> 2 </button>
                 <button class="key number" id="calc-key-3" value='3' name="button" type="submit"> 3 </button>
                 <button class="key operator" id="calc-plus" value="plus" name="button" type="submit"> &plus; </button>
@@ -50,12 +49,12 @@
                 <button class="key operator" id="calc-equals" value="equals" name="button" type="submit"> &equals; </button>
                 <button class="key operator" id="calc-divide" value="divide" name="button" type="submit"> &divide; </button>
 
-                <p>
+                <div>
                     <input id="prev_val" type = "hidden" name="prev_val" value="{{prev_val}}">
                     <input id="prev_opr" type = "hidden" name="prev_opr" value="{{prev_opr}}">
                     <input id="new_val" type = "hidden" name="new_val" value="{{new_val}}">
-                </p>
-            </p>
+                </div>
+            </div>
             {% csrf_token %}
         </form>
     </div>
