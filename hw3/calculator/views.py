@@ -41,6 +41,14 @@ def isnum(s):
         return True
 
 def calculator(request):
+    if request.method == 'GET':
+        context = {}
+        context['prev_opr'] = "plus"
+        context['prev_val'] = '0'
+        context['new_val'] = '0'
+        context['cal_result'] = '0'
+        return render(request, 'calculator/calculator.html', context)
+
     errors = []
     context = {}
     if 'prev_opr' not in request.POST or request.POST['prev_opr'] not in ['plus', 'minus', 'times', 'divide']:
