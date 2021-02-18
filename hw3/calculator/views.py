@@ -43,21 +43,21 @@ def isnum(s):
 def calculator(request):
     errors = []
     context = {}
-    if 'prev_opr' not in request.GET or request.GET['prev_opr'] not in ['plus', 'minus', 'times', 'divide']:
+    if 'prev_opr' not in request.POST or request.POST['prev_opr'] not in ['plus', 'minus', 'times', 'divide']:
         errors.append("Operation Error: Previous Operator changed or deleted")
-    if 'prev_val' not in request.GET or not isnum(request.GET['prev_val']):
+    if 'prev_val' not in request.POST or not isnum(request.POST['prev_val']):
         errors.append("ValueError: Previous Value changed or deleted")
-    if 'new_val' not in request.GET or not isnum(request.GET['new_val']):
+    if 'new_val' not in request.POST or not isnum(request.POST['new_val']):
         errors.append("ValueError: New Value changed or deleted")
-    if 'button' not in request.GET or request.GET['button'] not in ([chr(x) for x in range(48, 58)] + ['plus', 'minus', 'times', 'divide','equals']):
+    if 'button' not in request.POST or request.POST['button'] not in ([chr(x) for x in range(48, 58)] + ['plus', 'minus', 'times', 'divide','equals']):
         errors.append("ValueError: no button clicked or button value changed")
     if errors:
         return render(request, 'calculator/calculator.html', {'errors': errors})
 
-    prev_opr = request.GET['prev_opr']
-    prev_val = request.GET['prev_val']
-    new_val = request.GET['new_val']
-    buttonvalue = request.GET['button']
+    prev_opr = request.POST['prev_opr']
+    prev_val = request.POST['prev_val']
+    new_val = request.POST['new_val']
+    buttonvalue = request.POST['button']
 
     if buttonvalue in [chr(x) for x in range(48, 58)]:
         update_val = str(update(new_val, buttonvalue))
