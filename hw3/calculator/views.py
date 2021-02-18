@@ -43,11 +43,28 @@ def calculator(request):
         errors.append("Error: Must Have Previous Value")
     if 'new_val' not in request.session:
         errors.append("Error: Must Have New Value")
+    if errors:
+        return render(request, 'calculator/calculator.html', {'errors': errors})
     context = {}
-    prev_opr = request.session['prev_opr']
-    prev_val = request.session['prev_val']
-    new_val = request.session['new_val']
-    if 'button' in request.GET:
+    try:
+        prev_opr = request.session['prev_opr']
+        prev_val = request.session['prev_val']
+        new_val = request.session['new_val']
+    except:
+        errors.append("Session Error: Session be changed")
+        return render(request, 'calculator/calculator.html', {'errors': errors})
+
+    if 'button' not in request.GET:
+        errors.append("ValueError: no button clicked")
+    if 'prev_opr' not in request.GET:
+        errors.append("Operation Error: Must Have Previous Operator")
+    if 'prev_val' not in request.GET:
+        errors.append("ValueError: Must Have Previous Value")
+    if 'new_val' not in request.GET:
+        errors.append("ValueError: Must Have New Value")
+        return render(request, 'calculator/calculator.html', {'errors': errors})
+
+    else:
         buttonvalue = request.GET['button']
         if buttonvalue in [chr(x) for x in range(48,58)]:
             update_val = str(update(new_val,buttonvalue))
@@ -68,14 +85,22 @@ def calculator(request):
                     cal_result = times(prev_val, new_val)
                 elif prev_opr == 'divide':
                     cal_result = divide(prev_val, new_val)
+                else:
+                    errors.append("Operation Value: previous operation changed")
+                    return render(request, 'calculator/calculator.html', {'errors': errors})
+
                 if buttonvalue in ['plus', 'minus', 'times', 'divide']:
                     request.session['prev_opr'] = buttonvalue
                     request.session['prev_val'] = str(cal_result)
                     request.session['new_val'] = '0'
-                else:
+                elif buttonvalue == 'equals':
                     request.session['prev_opr'] = 'plus'
                     request.session['prev_val'] = '0'
                     request.session['new_val'] = '0'
+                else:
+                    errors.append("Button invalid: button value changed")
+                    return render(request, 'calculator/calculator.html', {'errors': errors})
+                # renew sessions
                 context['prev_opr'] = request.session['prev_opr']
                 context['prev_val'] = request.session['prev_val']
                 context['new_val'] =  request.session['new_val']

@@ -27,9 +27,9 @@
     <p class="center">Homework #3 for course 17-637 Web Application</p>
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
-
+        {#name="cal_result"#}
         <form action="calculator">
-            <input class = "area-display" type="text" readonly="" id="calc-display" name="cal_result"  method="GET" value="{{cal_result}}">
+            <input class = "area-display" type="text" readonly="" id="calc-display"  value="{{cal_result}}">
 
             <!-- the number and calculator part    -->
             <div class="area-calcboard" method="POST">
