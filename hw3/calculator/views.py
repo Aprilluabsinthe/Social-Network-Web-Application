@@ -56,12 +56,12 @@ def calculator(request):
 
     if 'button' not in request.GET:
         errors.append("ValueError: no button clicked")
-    if 'prev_opr' not in request.GET:
-        errors.append("Operation Error: Must Have Previous Operator")
-    if 'prev_val' not in request.GET:
-        errors.append("ValueError: Must Have Previous Value")
-    if 'new_val' not in request.GET:
-        errors.append("ValueError: Must Have New Value")
+    if 'prev_opr' not in request.GET or request.GET['prev_opr'] not in ['plus', 'minus', 'times', 'divide']:
+        errors.append("Operation Error: Previous Operator changed or deleted")
+    if 'prev_val' not in request.GET or not request.GET['prev_val'].isnumeric():
+        errors.append("ValueError: Previous Value changed or deleted")
+    if 'new_val' not in request.GET or not request.GET['prev_val'].isnumeric():
+        errors.append("ValueError: New Value changed or deleted")
         return render(request, 'calculator/calculator.html', {'errors': errors})
 
     else:
