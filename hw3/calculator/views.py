@@ -60,7 +60,7 @@ def calculator(request):
         errors.append("Operation Error: Previous Operator changed or deleted")
     if 'prev_val' not in request.GET or not request.GET['prev_val'].isnumeric():
         errors.append("ValueError: Previous Value changed or deleted")
-    if 'new_val' not in request.GET or not request.GET['prev_val'].isnumeric():
+    if 'new_val' not in request.GET or not request.GET['new_val'].isnumeric():
         errors.append("ValueError: New Value changed or deleted")
         return render(request, 'calculator/calculator.html', {'errors': errors})
 
