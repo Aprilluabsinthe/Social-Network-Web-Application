@@ -21,6 +21,7 @@
                 <a href="/">home_page</a>
             </p>
         {% endfor %}
+
     {% else %}
     <!-- the headline -->
     <h1 class="center">Di Lu's calculator</h1>
@@ -28,26 +29,26 @@
     <!-- the main board for the calculator    -->
     <div class="area-mainboard">
         {#name="cal_result"#}
-        <form action="calculator">
+        <form method="POST" action="calculator">
             <input class = "area-display" type="text" readonly="" id="calc-display"  value="{{cal_result}}">
 
             <!-- the number and calculator part    -->
             <div class="area-calcboard">
-                <button class="key number" id="calc-key-1" value='1' name="button" type="submit" method="POST"> 1 </button>{% csrf_token %}
-                <button class="key number" id="calc-key-2" value='2' name="button" type="submit" method="POST"> 2 </button>
-                <button class="key number" id="calc-key-3" value='3' name="button" type="submit" method="POST"> 3 </button>
-                <button class="key operator" id="calc-plus" value="plus" name="button" type="submit" method="POST"> &plus; </button>
-                <button class="key number" id="calc-key-4" value='4' name="button" type="submit" method="POST"> 4 </button>
-                <button class="key number" id="calc-key-5" value='5' name="button" type="submit" method="POST"> 5 </button>
-                <button class="key number" id="calc-key-6" value='6' name="button" type="submit" method="POST"> 6 </button>
-                <button class="key operator" id="calc-minus" value="minus" name="button" type="submit" method="POST"> &minus; </button>
-                <button class="key number" id="calc-key-7" value='7' name="button" type="submit" method="POST"> 7 </button>
-                <button class="key number" id="calc-key-8" value='8' name="button" type="submit" method="POST"> 8 </button>
-                <button class="key number" id="calc-key-9" value='9' name="button" type="submit" method="POST"> 9 </button>
-                <button class="key operator" id="calc-times" value="times" name="button" type="submit" method="POST"> &times; </button>
-                <button class="key number" id="calc-key-0" value='0' name="button" type="submit" method="POST"> 0 </button>
-                <button class="key operator" id="calc-equals" value="equals" name="button" type="submit" method="POST"> &equals; </button>
-                <button class="key operator" id="calc-divide" value="divide" name="button" type="submit" method="POST"> &divide; </button>
+                <button class="key number" id="calc-key-1" value='1' name="button" type="submit" > 1 </button>
+                <button class="key number" id="calc-key-2" value='2' name="button" type="submit" > 2 </button>
+                <button class="key number" id="calc-key-3" value='3' name="button" type="submit" > 3 </button>
+                <button class="key operator" id="calc-plus" value="plus" name="button" type="submit" > &plus; </button>
+                <button class="key number" id="calc-key-4" value='4' name="button" type="submit" > 4 </button>
+                <button class="key number" id="calc-key-5" value='5' name="button" type="submit" > 5 </button>
+                <button class="key number" id="calc-key-6" value='6' name="button" type="submit" > 6 </button>
+                <button class="key operator" id="calc-minus" value="minus" name="button" type="submit"> &minus; </button>
+                <button class="key number" id="calc-key-7" value='7' name="button" type="submit" > 7 </button>
+                <button class="key number" id="calc-key-8" value='8' name="button" type="submit" > 8 </button>
+                <button class="key number" id="calc-key-9" value='9' name="button" type="submit" > 9 </button>
+                <button class="key operator" id="calc-times" value="times" name="button" type="submit" > &times; </button>
+                <button class="key number" id="calc-key-0" value='0' name="button" type="submit" > 0 </button>
+                <button class="key operator" id="calc-equals" value="equals" name="button" type="submit" > &equals; </button>
+                <button class="key operator" id="calc-divide" value="divide" name="button" type="submit" > &divide; </button>
 
                 <div>
                     <input id="prev_val" type = "hidden" name="prev_val" value="{{prev_val}}">
