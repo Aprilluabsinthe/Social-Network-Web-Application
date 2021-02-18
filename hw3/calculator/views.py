@@ -45,6 +45,7 @@ def calculator(request):
         errors.append("Error: Must Have New Value")
     if errors:
         return render(request, 'calculator/calculator.html', {'errors': errors})
+
     context = {}
     try:
         prev_opr = request.session['prev_opr']
@@ -66,7 +67,11 @@ def calculator(request):
         return render(request, 'calculator/calculator.html', {'errors': errors})
 
     else:
-        buttonvalue = request.GET['button']
+        try:
+            buttonvalue = request.GET['button']
+        except:
+            errors.append("ValueError: no button clicked")
+            return render(request, 'calculator/calculator.html', {'errors': errors})
         if buttonvalue in [chr(x) for x in range(48,58)]:
             update_val = str(update(new_val,buttonvalue))
             request.session['new_val'] = update_val
