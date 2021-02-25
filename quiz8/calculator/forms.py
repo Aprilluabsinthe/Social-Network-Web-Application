@@ -11,5 +11,5 @@ class EntryForm(forms.Form):
     def clean_y(self):
         y = self.cleaned_data.get("y")
         if y == 0:
-            raise forms.ValidationError("Y == 0!!!!")
+            raise forms.ValidationError("Y can not equals 0!!!!")
         return y
