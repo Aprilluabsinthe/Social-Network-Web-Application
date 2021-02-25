@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lecture #8 Quiz</title>
+    <link rel="stylesheet" href="calculator.css">
+</head>
+
+<body>
+    <h1> Quiz 8</h1>
+    <hr/>
+        <table>
+            <tr>
+                <td colspan="1" class="message">
+                    {{message}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <form method='POST'>
+                        {% csrf_token %}
+                        <table>
+                            {{form}}}
+                            <tr>
+                                <td></td>
+                                <td><button type="submit" name="op" value="devide">&divide;</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    <hr/>
+</body>
+</html>
