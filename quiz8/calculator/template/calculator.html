@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lecture #8 Quiz</title>
+    <link rel="stylesheet" href="calculator.css">
+</head>
+
+<body>
+
+{% for result %}
+    <div>{{x_input}} &divide; {{y_input}} &equals; {{result}}</div>
+{% end if %}
+
+<form class = "divide" action = "calculator" method='GET' action="calculator">
+
+    <p>
+        <label>X:</label>
+        <input type='text' name="X_value">
+    </p>
+    <p>
+        <label>Y:</label>
+        <input type='text' name="Y_value">
+    </p>
+    <p>
+        <button type = "submit"> &divide;</button>
+    </p>
+        {{form}}}
+    {% csrf_token %}
+</form>
+</body>
+</html>
