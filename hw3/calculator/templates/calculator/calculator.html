@@ -11,18 +11,6 @@
 
 <!-- the container -->
 <div class="container" id = "mainboard">
-
-    {% if errors %}
-        {% for error in errors %}
-            <div class="error" style="color:darkred ; font-size : 2.5rem" id="message">
-                {{error}}
-            </div>
-            <p>
-                <a href="/">home_page</a>
-            </p>
-        {% endfor %}
-
-    {% else %}
     <!-- the headline -->
     <h1 class="center">Di Lu's calculator</h1>
     <p class="center">Homework #3 for course 17-637 Web Application</p>
@@ -59,7 +47,6 @@
             {% csrf_token %}
         </form>
     </div>
-    {% endif %}
     <!--  additional paragraph  -->
     <p class="center">Andrew ID: dilu</p>
     <p class="center">Email: dilu@andrew.cmu.edu</p>

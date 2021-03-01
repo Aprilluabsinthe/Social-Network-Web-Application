@@ -20,5 +20,5 @@ from calculator import views
 urlpatterns = [
     path('', views.home_page),
     path('calculator',views.calculator),
-    # path('display',views.display),
+    path('calculator/errors',views.errors),
 ]
