@@ -7,10 +7,10 @@
             Menu
         </button>
         <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'globalstream' %}" id="id_nav_global_stream">Global Stream</a>
-            <a class="dropdown-item" href="{% url 'followerstream' %}" id="id_nav_follower_stream">Follower Stream</a>
-            <a class="dropdown-item" href="{% url 'profile' %}" id="id_nav_profile">My Profile</a>
-            <a class="dropdown-item" href="{% url 'logout' %}" id="id_nav_logout">Logout</a>
+            <a class="dropdown-item" href="{% url 'globalstream' %}"> <span id="id_nav_global_stream">Global Stream</span></a>
+            <a class="dropdown-item" href="{% url 'followerstream' %}"> <span id="id_nav_follower_stream">Follower Stream</span></a>
+            <a class="dropdown-item" href="{% url 'profile' %}"> <span id="id_nav_profile">My Profile</span></a>
+            <a class="dropdown-item" href="{% url 'logout' %}"><span id="id_nav_logout">Logout</span></a>
         </div>
     </div>
     {% endblock %}
