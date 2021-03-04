@@ -41,6 +41,12 @@
 </div>
 {% endif %}
 
+{% if errorlist %}
+    <div class="errorlist">
+        {{errorlist}}}
+    </div>
+{% endif %}
+
 <div>
     {% block content %}
     {% endblock %}
