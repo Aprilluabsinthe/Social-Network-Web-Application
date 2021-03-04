@@ -54,16 +54,26 @@
                 <label>Profile Picture</label>
                 <input type="file" class="form-control-file" id="id_profile_picture">
             </div>
+            <div>
+                <button id="id_bio_profile_button" type="submit">Submit</button>
+            </div>
+        </div>
     </form>
 
     <div class="card-body">
-        <button id="id_bio_profile_button" type="submit">Submit</button>
         <div>
             <p>You are following:</p>
             <ul>
-                <li href="#">Billkin Puttipong</li>
-                <li href="#">PP Krit</li>
-                <li href="#">Aduso Qu</li>
+                {% load static %}
+                <li>
+                    <a href="{% url 'profile' %}" id="id_profile_line_billkin">Billkin Puttipong</a>
+                </li>
+                <li>
+                    <a href="{% url 'profile' %}" id="id_profile_line_ppkrit">PP Krit</a>
+                </li>
+                <li>
+                    <a href="{% url 'profile' %}" id="id_profile_line_aduso">Aduso Qu</a>
+                </li>
             </ul>
         </div>
     </div>

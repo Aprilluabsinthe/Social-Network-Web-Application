@@ -7,6 +7,7 @@ urlpatterns = [
     path('followerstream', views.followerstream_action, name='followerstream'),
     path('logout', views.logout_action, name='logout'),
     path('profile', views.profile_action, name='profile'),
+    path('profile/username=?', views.profile_action, name='profile'),
     path('delete/<int:id>', views.delete_action, name='delete'),
     path('edit/<int:id>', views.edit_action, name='edit'),
     path('login', views.login_action, name='login'),

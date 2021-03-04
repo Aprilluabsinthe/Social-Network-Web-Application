@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
 
-from socialnetwork.forms import EntryForm, LoginForm, RegistrationForm
+from socialnetwork.forms import EntryForm, LoginForm, RegisterForm
 
 from socialnetwork.MyMemoryList import MyMemoryList
 
@@ -132,13 +132,8 @@ def login_action(request):
     if request.method == 'GET':
         context['form'] = LoginForm()
         return render(request, 'socialnetwork/login.html', context)
-
-    # Creates a bound form from the request POST parameters and makes the
-    # form available in the request context dictionary.
     form = LoginForm(request.POST)
     context['form'] = form
-
-    # Validates the form.
     if not form.is_valid():
         return render(request, 'socialnetwork/login.html', context)
 
@@ -156,15 +151,11 @@ def logout_action(request):
 
 def register_action(request):
     context = {}
-
     # Just display the registration form if this is a GET request.
     if request.method == 'GET':
-        context['form'] = RegistrationForm()
+        context['form'] = RegisterForm()
         return render(request, 'socialnetwork/register.html', context)
-
-    # Creates a bound form from the request POST parameters and makes the
-    # form available in the request context dictionary.
-    form = RegistrationForm(request.POST)
+    form = RegisterForm(request.POST)
     context['form'] = form
 
     # Validates the form.
@@ -181,6 +172,5 @@ def register_action(request):
 
     new_user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password'])
-
     login(request, new_user)
     return redirect(reverse('home'))

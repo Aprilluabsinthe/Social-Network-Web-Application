@@ -17,13 +17,9 @@ class EntryForm(forms.Form):
     email = forms.CharField(required=False, max_length=32)
     phone_number = forms.CharField(required=False, max_length=16, label='Phone #')
 
-
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20, label='Username')
     password = forms.CharField(max_length=200, widget=forms.PasswordInput(), label="Password")
-
-    # Customizes form validation for properties that apply to more
-    # than one field.  Overrides the forms.Form.clean function.
     def clean(self):
         # Calls our parent (forms.Form) .clean function, gets a dictionary
         # of cleaned data as a result
@@ -40,7 +36,7 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
-class RegistrationForm(forms.Form):
+class RegisterForm(forms.Form):
     username = forms.CharField(max_length=20, label="Username")
     password = forms.CharField(max_length=200,
                                label='Password',
