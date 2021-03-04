@@ -2,10 +2,9 @@
 
 {% block nav-bar %}
 <div align = "left" class="dropdown active">
-    <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+    <button id ="id_show_nav_button" aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
             data-toggle="dropdown"
              type="button">
-        <span id ="id_show_nav_button"></span>
     </button>
     <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
         <a class="dropdown-item" href="{% url 'globalstream' %}"> <span id="id_nav_global_stream">Global Stream</span></a>
