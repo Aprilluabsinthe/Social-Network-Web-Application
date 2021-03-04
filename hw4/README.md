@@ -17,4 +17,4 @@
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this
-homework assignment.    
+homework assignment.

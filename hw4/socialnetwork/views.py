@@ -48,33 +48,10 @@ def globalstream_action(request):
 
 def profile_action(request):
     return render(request, 'socialnetwork/profile.html')
-    # if request.method == 'GET':
-    #     context = {'form': ProfileForm()}
-    #     return render(request, 'socialnetwork/profile.html', context)
-    #
-    # form = ProfileForm(request.POST)
-    # if not form.is_valid():
-    #     context = {'form': form}
-    #     return render(request, 'addrbook/create.html', context)
-    #
-    # my_entry = {}
-    # for field in ['last_name', 'first_name', 'birthday', 'children',
-    #               'address', 'city', 'state', 'zip_code', 'country',
-    #               'email', 'phone_number']:
-    #     my_entry[field] = form.cleaned_data[field]
-    #
-    # my_entry['created_by'] = request.user
-    # my_entry['creation_time'] = timezone.now()
-    # my_entry['updated_by'] = request.user
-    # my_entry['update_time'] = timezone.now()
-    #
-    # ENTRY_LIST.create(my_entry)
-    #
-    # message = 'Entry created'
-    # new_form = ProfileForm(my_entry)
-    # context = {'message': message, 'entry': my_entry, 'form': new_form}
-    # return render(request, 'addrbook/edit.html', context)
-    return render(request, 'socialnetwork/profile.html')
+
+
+def profile_others(request):
+    return render(request, 'socialnetwork/profile_others.html')
 
 
 @login_required
