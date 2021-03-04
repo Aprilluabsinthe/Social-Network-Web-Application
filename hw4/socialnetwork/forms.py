@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 
-class EntryForm(forms.Form):
+class ProfileForm(forms.Form):
     last_name = forms.CharField(max_length=20)
     first_name = forms.CharField(max_length=20)
     birthday = forms.DateField(required=False)
@@ -16,6 +16,7 @@ class EntryForm(forms.Form):
     country = forms.CharField(required=False, max_length=30)
     email = forms.CharField(required=False, max_length=32)
     phone_number = forms.CharField(required=False, max_length=16, label='Phone #')
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20, label='Username')

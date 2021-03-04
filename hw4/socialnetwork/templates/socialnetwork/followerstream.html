@@ -1,4 +1,4 @@
-{% extends "socialnetwork/base.html" %}
+{% extends "socialnetwork/basewithnav.html" %}
 {% block user-info %}
 <div>
         <span id="id_logged_in_user_name">
@@ -22,22 +22,9 @@
 {% endblock %}
 
 {% block page-name %}
-<h1 id="id_page_name">Global Stream</h1>
+<h1 id="id_page_name">Follower Stream</h1>
 {% endblock %}
 
-{% block nav-bar %}
-<div class="dropdown">
-    <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-            id="dropdownMenuButton" type="button">
-        Dropdown button
-    </button>
-    <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-    </div>
-</div>
-{% endblock %}
 
 {% block content %}
 

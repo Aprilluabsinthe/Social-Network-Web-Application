@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
 
-from socialnetwork.forms import EntryForm, LoginForm, RegisterForm
+from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm
 
 from socialnetwork.MyMemoryList import MyMemoryList
 
@@ -38,23 +38,52 @@ def globalstream_action(request):
 
     if len(matches) == 1:
         match = matches[0]
-        form = EntryForm(match)
+        form = ProfileForm(match)
         context = {'entry': match, 'form': form}
         return render(request, 'socialnetwork/edit.html', context)
 
     context = {'entries': matches}
     return render(request, 'socialnetwork/list.html', context)
 
+
 def profile_action(request):
-    return render(request,'socialnetwork/profile.html')
+    return render(request, 'socialnetwork/profile.html')
+    # if request.method == 'GET':
+    #     context = {'form': ProfileForm()}
+    #     return render(request, 'socialnetwork/profile.html', context)
+    #
+    # form = ProfileForm(request.POST)
+    # if not form.is_valid():
+    #     context = {'form': form}
+    #     return render(request, 'addrbook/create.html', context)
+    #
+    # my_entry = {}
+    # for field in ['last_name', 'first_name', 'birthday', 'children',
+    #               'address', 'city', 'state', 'zip_code', 'country',
+    #               'email', 'phone_number']:
+    #     my_entry[field] = form.cleaned_data[field]
+    #
+    # my_entry['created_by'] = request.user
+    # my_entry['creation_time'] = timezone.now()
+    # my_entry['updated_by'] = request.user
+    # my_entry['update_time'] = timezone.now()
+    #
+    # ENTRY_LIST.create(my_entry)
+    #
+    # message = 'Entry created'
+    # new_form = ProfileForm(my_entry)
+    # context = {'message': message, 'entry': my_entry, 'form': new_form}
+    # return render(request, 'addrbook/edit.html', context)
+    return render(request, 'socialnetwork/profile.html')
+
 
 @login_required
 def create_action(request):
     if request.method == 'GET':
-        context = {'form': EntryForm()}
+        context = {'form': ProfileForm()}
         return render(request, 'socialnetwork/create.html', context)
 
-    form = EntryForm(request.POST)
+    form = ProfileForm(request.POST)
     if not form.is_valid():
         context = {'form': form}
         return render(request, 'socialnetwork/create.html', context)
@@ -73,7 +102,7 @@ def create_action(request):
     ENTRY_LIST.create(my_entry)
 
     message = 'Entry created'
-    new_form = EntryForm(my_entry)
+    new_form = ProfileForm(my_entry)
     context = {'message': message, 'entry': my_entry, 'form': new_form}
     return render(request, 'socialnetwork/edit.html', context)
 
@@ -101,11 +130,11 @@ def edit_action(request, id):
         return render(request, 'socialnetwork/globalstream.html', context)
 
     if request.method == 'GET':
-        form = EntryForm(entry)
+        form = ProfileForm(entry)
         context = {'entry': entry, 'form': form}
         return render(request, 'socialnetwork/edit.html', context)
 
-    edit_form = EntryForm(request.POST)
+    edit_form = ProfileForm(request.POST)
     if not edit_form.is_valid():
         context = {'form': edit_form, 'entry': entry}
         return render(request, 'socialnetwork/edit.html', context)
