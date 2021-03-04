@@ -1,66 +1,17 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    {% load static %}
-    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
-    <link href="{% static 'socialnetwork/base.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/bootstrap-grid.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/bootstrap-reboot.css' %}" rel="stylesheet" type="text/css">
-    {% block extrahead %}
-    {% endblock %}
-    <title> {% block title %} Blog Master {% endblock %} </title>
-</head>
-
-<body>
-<div class="mycontainer">
-    <div id="id_big_heading" class="big-heading">
-        Blog Master
-    </div>
-
-    <div class="user-info">
-        {% block user-info %}
-        {% endblock %}
-    </div>
-
-    <div align="right">
-        {% block nav-bar %}
-        <div class="dropdown active">
-            <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
-                    data-toggle="dropdown"
-                    id="id_show_nav_button" type="button">
-                Menu
-            </button>
-            <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
-                <a class="dropdown-item" href="{% url 'globalstream' %}" id="id_nav_global_stream">Global Stream</a>
-                <a class="dropdown-item" href="{% url 'followerstream' %}" id="id_nav_follower_stream">Follower Stream</a>
-                <a class="dropdown-item" href="{% url 'profile' %}" id="id_nav_profile">My Profile</a>
-                <a class="dropdown-item" href="{% url 'logout' %}" id="id_nav_logout">Logout</a>
-            </div>
+{% extends "socialnetwork/base.html" %}
+    {% block nav-bar %}
+    <div align = "right" class="dropdown active">
+        <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+                data-toggle="dropdown"
+                id="id_show_nav_button" type="button">
+            Menu
+        </button>
+        <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'globalstream' %}" id="id_nav_global_stream">Global Stream</a>
+            <a class="dropdown-item" href="{% url 'followerstream' %}" id="id_nav_follower_stream">Follower Stream</a>
+            <a class="dropdown-item" href="{% url 'profile' %}" id="id_nav_profile">My Profile</a>
+            <a class="dropdown-item" href="{% url 'logout' %}" id="id_nav_logout">Logout</a>
         </div>
-        {% endblock %}
     </div>
-
-
-</div>
-
-<div id="page_name">
-    {% block page-name %}
     {% endblock %}
 </div>
-
-{% if message %}
-<div class="message">
-    {{message}}
-</div>
-{% endif %}
-
-<div>
-    {% block content %}
-    {% endblock %}
-</div>
-</body>
-</html>

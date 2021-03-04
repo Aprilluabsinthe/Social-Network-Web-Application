@@ -5,24 +5,10 @@
             {{user.first_name}} {{user.last_name}} <br>
         </span>
 </div>
-<div>
-    <a href="{% url 'register' %}">
-        <button id="id_register_link">Register</button>
-    </a>
-    <a href="{% url 'globalstream' %}">
-        <button id="id_globalstream_link">Global Stream</button>
-    </a>
-    <a href="{% url 'profile' %}">
-        <button id="id_profile_link">Profile</button>
-    </a>
-    <a href="{% url 'logout' %}">
-        <button id="id_logout_link">Logout</button>
-    </a>
-</div>
 {% endblock %}
 
 {% block page-name %}
-<h1><span id="id_page_name">Follower Stream</span>></h1>
+<h1><span id="id_page_name">Follower Stream</span></h1>
 {% endblock %}
 
 
