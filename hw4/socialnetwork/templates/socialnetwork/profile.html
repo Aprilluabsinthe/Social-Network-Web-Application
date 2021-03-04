@@ -1,0 +1,74 @@
+{% extends "socialnetwork/base.html" %}
+{% block user-info %}
+<div>
+        <span id="id_logged_in_user_name">
+            {{user.first_name}} {{user.last_name}} <br>
+        </span>
+</div>
+<div>
+    <a href="{% url 'register' %}">
+        <button id="id_register_link">Register</button>
+    </a>
+    <a href="{% url 'followerstream' %}">
+        <button id="id_followerstream_link">follower Stream</button>
+    </a>
+    <a href="{% url 'logout' %}">
+        <button id="id_logout_link">Logout</button>
+    </a>
+</div>
+{% endblock %}
+
+{% block page-name %}
+<h1 id="id_page_name">Profile Page For {{user.first_name}} {{user.last_name}}</h1>
+{% endblock %}
+
+{% block nav-bar %}
+<div class="dropdown">
+    <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+            id="dropdownMenuButton" type="button">
+        Dropdown button
+    </button>
+    <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post" action="profile_action">
+        <div class="mycontainer_light" style="width: 50rem;">
+            <div>
+                <span id="id_user_picture"></span>
+            </div>
+            <figure>
+                <img class="figure-img"
+                     src="https://c-ssl.duitang.com/uploads/blog/202011/30/20201130162437_d3804.thumb.1000_0.jpeg"
+                     alt="Card image cap">
+            </figure>
+
+            <input class="form-control">
+            <div class="form-group">
+                <label>Profile Picture</label>
+                <input type="file" class="form-control-file" id="id_profile_picture">
+            </div>
+    </form>
+
+    <div class="card-body">
+        <button id="id_bio_profile_button" type="submit">Submit</button>
+        <div>
+            <p>You are following:</p>
+            <ul>
+                <li href="#">Billkin Puttipong</li>
+                <li href="#">PP Krit</li>
+                <li href="#">Aduso Qu</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}
