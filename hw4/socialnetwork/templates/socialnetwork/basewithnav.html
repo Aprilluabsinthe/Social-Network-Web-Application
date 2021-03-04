@@ -2,16 +2,16 @@
 
 {% block nav-bar %}
 <div align = "left" class="dropdown active">
-    <button id ="id_show_nav_button" aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+    <button id="id_show_nav_button"  aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
             data-toggle="dropdown"
              type="button">
     </button>
     <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
 
-        <span id="id_nav_global_stream"><a class="dropdown-item" href="{% url 'globalstream' %}">Global Stream</a></span>
-        <span id="id_nav_follower_stream"><a class="dropdown-item" href="{% url 'followerstream' %}"> Follower Stream</a></span>
-         <span id="id_nav_profile"><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></span>
-        <span id="id_nav_logout"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></span>
+        <a class="dropdown-item" href="{% url 'globalstream' %}">G<span id="id_nav_global_stream">lobal Stream</span></a>
+        <a class="dropdown-item" href="{% url 'followerstream' %}"><span id="id_nav_follower_stream"> Follower Stream</span></a>
+        <a class="dropdown-item" href="{% url 'profile' %}"><span id="id_nav_profile">My Profile</span></a>
+        <a class="dropdown-item" href="{% url 'logout' %}"><span id="id_nav_logout">Logout</span></a>
     </div>
 </div>
 {% endblock %}
