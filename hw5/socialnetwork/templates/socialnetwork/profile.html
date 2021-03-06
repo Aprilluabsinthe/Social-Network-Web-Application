@@ -1,0 +1,60 @@
+{% extends "socialnetwork/basewithnav.html" %}
+{% block user-info %}
+<div>
+        <span id="id_logged_in_user_name">
+            {{user.first_name}} {{user.last_name}} <br>
+        </span>
+</div>
+{% endblock %}
+
+{% block page-name %}
+<h1><span id="id_page_name">Profile Page For {{user.first_name}} {{user.last_name}}</span></h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post" action="myprofile_action">
+        <div class="mycontainer_light" style="width: 50rem;">
+            <div>
+                <span >User's Picture</span>
+            </div>
+            <figure align="center">
+                <img id="id_user_picture" class="figure-img"
+                     src="https://c-ssl.duitang.com/uploads/blog/202011/30/20201130162437_d3804.thumb.1000_0.jpeg"
+                     alt="Card image cap">
+            </figure>
+
+            <textarea class="form-control" id="id_bio_input_text" ></textarea>
+
+            <div class="form-group">
+                <label>Profile Picture</label>
+                <input type="file" class="form-control-file" id="id_profile_picture">
+            </div>
+            <div>
+                <button id="id_bio_profile_button" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card-body">
+        <div>
+            <p>You are following:</p>
+            <ul>
+                {% load static %}
+                <li>
+                    <a href="{% url 'profile_others' %}" id="id_profile_link_ppkrit">Ashly Ash</a>
+                </li>
+                <li>
+                    <a href="{% url 'profile_others'%}" id="id_profile_link_billkin">Billkin Puttipong</a>
+                </li>
+                <li>
+                    <a href="{% url 'profile_others' %}" id="id_profile_link_aduso">Aduso Qu</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}

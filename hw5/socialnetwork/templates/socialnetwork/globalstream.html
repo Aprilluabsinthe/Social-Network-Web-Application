@@ -1,0 +1,123 @@
+{% extends "socialnetwork/basewithnav.html" %}
+
+{% block user-info %}
+<div>
+    <span id="id_logged_in_user_name">
+        {{user.first_name}} {{user.last_name}} <br>
+    </span>
+</div>
+{% endblock %}
+
+
+{% block page-name %}
+<h1><span id="id_page_name">Global Stream</span></h1>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+{% if error %}
+    <div class="error">
+        {{error}}
+    </div>
+{% endif %}
+
+<form id="post_input" method="post" action="{% url 'makepost' %}" style="width: 50%;">
+    <div>
+        <div class="col dark-teal-text">
+            New Post :
+        </div>
+        <div>
+            <input name = "post" class="form-control" id="id_post_input_text" type="text" aria-label="Large"
+                   aria-describedby="inputGroup-sizing-sm">
+        </div>
+        {% csrf_token %}
+        <div align="right">
+            <button id="id_post_button" type="submit">Submit</button>
+        </div>
+    </div>
+</form>
+
+<!--id="blog_1"-->
+{% for post in posts %}
+<div  style="width: 70%;" class="mycontainer_light">
+    <div class="row">
+        <!-- Post Content Column -->
+        <span class="col-lg">Published by
+            <p class="lead">
+                <a href="{% url 'profile_others' %}">
+                    <span class="message" id="id_post_profile_1">
+                        {{post.user.first_name}} {{post.user.last_name}}
+                    </span>
+                </a>
+            </p>
+            <p align="center">
+                <span class="lead" id="id_post_text_1">
+                    {{post.content}}</span>
+            </p>
+            <p align="right" class="small dark-teal-text h-50">
+                <span id="id_post_date_time_1">
+                    {{post.time | date:'m/d/Y P'}}
+                </span>
+            </p>
+        </span>
+    </div>
+
+    <form method="POST" action="{% url 'makecomment' %}" >
+        <div>
+            <div class="col dark-teal-text">
+                comment
+            </div>
+            <div>
+                <input name="comment" class="form-control" id="id_comment_input_text_1" type="text">
+            </div>
+            {% csrf_token %}
+            <div align="right">
+                <button id="id_comment_button_1" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <hr>
+
+    {% for comment in comments %}
+
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-10">
+                <!-- Post Content Column -->
+                <div class="col-lg">Comment by
+                    <p class="lead">
+                        <span class="commenter" id="id_comment_profile_2">{{comment.user.first_name}} {{comment.user.last_name}}</span> :
+                    </p>
+                    <p align="center">
+                        <span class="lead" id="id_comment_text_2">{{comment.content}}</span>
+                    </p>
+                    <p align="right" class="small dark-teal-text">
+                        <span id="id_comment_date_time_2">{{comment.time}}</span>
+                    </p>
+<!--                    <form method="post" action="{% url 'makecomment' %}">-->
+<!--                        <div>-->
+<!--                            <div class="col dark-teal-text">-->
+<!--                                comment-->
+<!--                            </div>-->
+<!--                            <div>-->
+<!--                                <input class="form-control" id="id_comment_input_text_2" type="text">-->
+<!--                            </div>-->
+<!--                            {% csrf_token %}-->
+<!--                            <div align="right">-->
+<!--                                <button id="id_comment_button_2" type="submit">Submit</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+
+
+
+{% endblock %}
