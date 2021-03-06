@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -11,10 +12,10 @@ from django.utils import timezone
 
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
-from socialnetwork.MyMemoryList import MyMemoryList
+# from socialnetwork.MyMemoryList import MyMemoryList
 from socialnetwork.models import Post, Comment
 
-ENTRY_LIST = MyMemoryList()
+# ENTRY_LIST = MyMemoryList()
 
 
 @login_required
@@ -35,7 +36,7 @@ def globalstream_action(request):
 
     return render(request, 'socialnetwork/globalstream.html', {})
 
-
+@login_required
 def makepost(request):
     if not request.user:
         return render(request, 'socialnetwork/globalstream.html', {})
@@ -46,10 +47,10 @@ def makepost(request):
     context = {'posts': Post.objects.all()}
     new_post = Post(user=request.user,
                     content=request.POST['post'])
-    new_post.save();
+    new_post.save()
     return redirect('home')
 
-
+@login_required
 def makecomment(request):
     if not request.user:
         return render(request, 'socialnetwork/globalstream.html', {})
@@ -60,10 +61,103 @@ def makecomment(request):
 
     context = {'comments': Comment.objects.all()}
     new_comment = Comment(user=request.user,
-                          content=request.POST['comment'])
-    new_comment.save();
+                          content=request.POST['comment'],
+                          )
+    new_comment.save()
     return redirect('home')
 
+@login_required
+def delete_action_post(request, post_id):
+    context = {'posts': Post.objects.all()}
+
+    if request.method != 'POST':
+        context['error'] = 'Deletes must be done using the POST method'
+        return render(request, 'socialnetwork/globalstream.html', context)
+
+    # Deletes the item if present in the database.
+    try:
+        post_to_delete = Post.objects.get(id=post_id)
+        if request.user.username != post_to_delete.user.username:
+            context['error'] = 'You can only delete Posts you have created.'
+            return redirect('home')
+
+        post_to_delete.delete()
+        return redirect('home')
+    except ObjectDoesNotExist:
+        context['error'] = 'The item did not exist in the To Do List.'
+        return redirect('home')
+
+@login_required
+def delete_action_comment(request, comment_id):
+    context = {'comments': Comment.objects.all()}
+
+    if request.method != 'POST':
+        context['error'] = 'Deletes must be done using the POST method'
+        return render(request, 'socialnetwork/globalstream.html', context)
+
+    # Deletes the item if present in the database.
+    try:
+        comment_to_delete = Comment.objects.get(id=comment_id)
+        if request.user.username != comment_to_delete.user.username:
+            context['error'] = 'You can only delete comments you have created.'
+            return redirect('home')
+
+        comment_to_delete.delete()
+        return redirect('home')
+    except ObjectDoesNotExist:
+        context['error'] = 'The item did not exist in the To Do List.'
+        return redirect('home')
+
+# @login_required
+# def edit_action(request, id):
+#     if not entry:
+#         context = {'message': f"Record with id={id} does not exist"}
+#         return render(request, 'socialnetwork/globalstream.html', context)
+#
+#     if request.method == 'GET':
+#         form = ProfileForm(entry)
+#         context = {'entry': entry, 'form': form}
+#         return render(request, 'socialnetwork/edit.html', context)
+#
+#     edit_form = ProfileForm(request.POST)
+#     if not edit_form.is_valid():
+#         context = {'form': edit_form, 'entry': entry}
+#         return render(request, 'socialnetwork/edit.html', context)
+#
+#     for field in ['last_name', 'first_name', 'birthday', 'children',
+#                   'address', 'city', 'state', 'zip_code', 'country',
+#                   'email', 'phone_number']:
+#         entry[field] = edit_form.cleaned_data[field]
+#
+#     entry['updated_by'] = request.user
+#     entry['update_time'] = timezone.now()
+#
+#     ENTRY_LIST.update(entry)
+#
+#     message = 'Entry Updated'
+#     context = {'message': message, 'entry': entry, 'form': edit_form}
+#     return render(request, 'socialnetwork/edit.html', context)
+#
+#     context = {'posts': Post.objects.all()}
+#
+#     if request.method != 'POST':
+#         context['error'] = 'Editions must be done using the POST method'
+#         return render(request, 'socialnetwork/globalstream.html', context)
+#
+#     # Deletes the item if present in the database.
+#     try:
+#         post_to_edit = Post.objects.get(id=post_id)
+#         if request.user.username != post_to_edit.user.username:
+#             context['error'] = 'You can only edit Posts you have created.'
+#             return redirect('home')
+#
+#         post_to_edit[]
+#         return redirect('home')
+#     except ObjectDoesNotExist:
+#         context['error'] = 'The item did not exist in the To Do List.'
+#         return redirect('home')
+#
+#
 def myprofile_action(request):
     return render(request, 'socialnetwork/profile.html')
 
@@ -72,81 +166,38 @@ def profile_others(request):
     return render(request, 'socialnetwork/profile_others.html')
 
 
-@login_required
-def create_action(request):
-    if request.method == 'GET':
-        context = {'form': ProfileForm()}
-        return render(request, 'socialnetwork/create.html', context)
-
-    form = ProfileForm(request.POST)
-    if not form.is_valid():
-        context = {'form': form}
-        return render(request, 'socialnetwork/create.html', context)
-
-    my_entry = {}
-    for field in ['last_name', 'first_name', 'birthday', 'children',
-                  'address', 'city', 'state', 'zip_code', 'country',
-                  'email', 'phone_number']:
-        my_entry[field] = form.cleaned_data[field]
-
-    my_entry['created_by'] = request.user
-    my_entry['creation_time'] = timezone.now()
-    my_entry['updated_by'] = request.user
-    my_entry['update_time'] = timezone.now()
-
-    ENTRY_LIST.create(my_entry)
-
-    message = 'Entry created'
-    new_form = ProfileForm(my_entry)
-    context = {'message': message, 'entry': my_entry, 'form': new_form}
-    return render(request, 'socialnetwork/edit.html', context)
-
-
-@login_required
-def delete_action(request, id):
-    if request.method != 'POST':
-        message = 'Invalid request.  POST method must be used.'
-        return render(request, 'socialnetwork/globalstream.html', {'message': message})
-
-    entry = ENTRY_LIST.read(id)
-    if not entry:
-        context = {'message': f"Record with id={id} does not exist"}
-        return render(request, 'socialnetwork/globalstream.html', context)
-
-    message = f"Sorry, deleting is not implemented in this example."
-    return render(request, 'socialnetwork/globalstream.html', {'message': message})
+# @login_required
+# def create_action(request):
+#     if request.method == 'GET':
+#         context = {'form': ProfileForm()}
+#         return render(request, 'socialnetwork/create.html', context)
+#
+#     form = ProfileForm(request.POST)
+#     if not form.is_valid():
+#         context = {'form': form}
+#         return render(request, 'socialnetwork/create.html', context)
+#
+#     my_entry = {}
+#     for field in ['last_name', 'first_name', 'birthday', 'children',
+#                   'address', 'city', 'state', 'zip_code', 'country',
+#                   'email', 'phone_number']:
+#         my_entry[field] = form.cleaned_data[field]
+#
+#     my_entry['created_by'] = request.user
+#     my_entry['creation_time'] = timezone.now()
+#     my_entry['updated_by'] = request.user
+#     my_entry['update_time'] = timezone.now()
+#
+#     ENTRY_LIST.create(my_entry)
+#
+#     message = 'Entry created'
+#     new_form = ProfileForm(my_entry)
+#     context = {'message': message, 'entry': my_entry, 'form': new_form}
+#     return render(request, 'socialnetwork/edit.html', context)
+#
 
 
-@login_required
-def edit_action(request, id):
-    entry = ENTRY_LIST.read(id)
-    if not entry:
-        context = {'message': f"Record with id={id} does not exist"}
-        return render(request, 'socialnetwork/globalstream.html', context)
 
-    if request.method == 'GET':
-        form = ProfileForm(entry)
-        context = {'entry': entry, 'form': form}
-        return render(request, 'socialnetwork/edit.html', context)
-
-    edit_form = ProfileForm(request.POST)
-    if not edit_form.is_valid():
-        context = {'form': edit_form, 'entry': entry}
-        return render(request, 'socialnetwork/edit.html', context)
-
-    for field in ['last_name', 'first_name', 'birthday', 'children',
-                  'address', 'city', 'state', 'zip_code', 'country',
-                  'email', 'phone_number']:
-        entry[field] = edit_form.cleaned_data[field]
-
-    entry['updated_by'] = request.user
-    entry['update_time'] = timezone.now()
-
-    ENTRY_LIST.update(entry)
-
-    message = 'Entry Updated'
-    context = {'message': message, 'entry': entry, 'form': edit_form}
-    return render(request, 'socialnetwork/edit.html', context)
 
 
 def login_action(request):

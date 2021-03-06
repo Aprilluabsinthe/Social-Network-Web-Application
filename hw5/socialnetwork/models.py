@@ -16,6 +16,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     content = models.CharField(max_length=200)
     time = models.DateTimeField(auto_now_add=True)
+    # commented_by = models.ForeignKey("Comment", blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return 'id=' + str(self.id) + ',user="' + self.user.username + ',first_name="' + self.first_name + '"'
