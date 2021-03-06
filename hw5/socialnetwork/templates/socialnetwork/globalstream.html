@@ -60,18 +60,19 @@
         <span class="col-lg">Published by
             <p class="lead">
                 <a href="{% url 'profile_others' %}">
-                    <span class="message" id="id_post_profile_1">
+                    <span class="message"
+                          id="id_post_profile_{{post.id}}">
                         {{post.user.first_name}} {{post.user.last_name}}
                     </span>
                 </a>
             </p>
             <p align="center">
-                <span class="lead" id="id_post_text_1">
+                <span class="lead" id="id_post_text__{{post.id}}">
                     {{post.content}}</span>
             </p>
             <p align="right" class="small dark-teal-text h-50">
-                <span id="id_post_date_time_1">
-                    {{post.time | date:'m/d/Y P'}}
+                <span id="id_post_date_time_{{post.id}}">
+                    {{post.time | date:'n/j/Y g:i A'}}
                 </span>
             </p>
         </span>
@@ -111,14 +112,14 @@
             </form>
             <div class="col-lg">Comment by
                 <p class="lead">
-                    <span class="commenter" id="id_comment_profile_2">{{comment.user.first_name}} {{comment.user.last_name}}</span>
+                    <span class="commenter" id="id_comment_profile_{{comment.id}}">{{comment.user.first_name}} {{comment.user.last_name}}</span>
                     :
                 </p>
                 <p align="center">
-                    <span class="lead" id="id_comment_text_2">{{comment.content}}</span>
+                    <span class="lead" id="id_comment_text_{{comment.id}}">{{comment.content}}</span>
                 </p>
                 <p align="right" class="small dark-teal-text">
-                    <span id="id_comment_date_time_2">{{comment.time}}</span>
+                    <span id="id_comment_date_time_{{comment.id}}">{{comment.time}}</span>
                 </p>
             </div>
         </div>
