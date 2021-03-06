@@ -13,7 +13,8 @@ from django.utils import timezone
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
 # from socialnetwork.MyMemoryList import MyMemoryList
-from socialnetwork.models import Post, Comment
+from socialnetwork.models import Post, Comment, Profile
+
 
 # ENTRY_LIST = MyMemoryList()
 
@@ -21,7 +22,8 @@ from socialnetwork.models import Post, Comment
 @login_required
 def home_action(request):
     return render(request, 'socialnetwork/globalstream.html',
-                  {'posts': Post.objects.all(), 'comments': Comment.objects.all()})
+                  {'posts': Post.objects.all(),
+                   'comments': Comment.objects.all()})
 
 
 @login_required
@@ -36,6 +38,7 @@ def globalstream_action(request):
 
     return render(request, 'socialnetwork/globalstream.html', {})
 
+
 @login_required
 def makepost(request):
     if not request.user:
@@ -49,6 +52,7 @@ def makepost(request):
                     content=request.POST['post'])
     new_post.save()
     return redirect('home')
+
 
 @login_required
 def makecomment(request):
@@ -65,6 +69,7 @@ def makecomment(request):
                           )
     new_comment.save()
     return redirect('home')
+
 
 @login_required
 def delete_action_post(request, post_id):
@@ -87,6 +92,7 @@ def delete_action_post(request, post_id):
         context['error'] = 'The item did not exist in the To Do List.'
         return redirect('home')
 
+
 @login_required
 def delete_action_comment(request, comment_id):
     context = {'comments': Comment.objects.all()}
@@ -108,17 +114,14 @@ def delete_action_comment(request, comment_id):
         context['error'] = 'The item did not exist in the To Do List.'
         return redirect('home')
 
+
 # @login_required
 # def edit_action(request, id):
-#     if not entry:
-#         context = {'message': f"Record with id={id} does not exist"}
-#         return render(request, 'socialnetwork/globalstream.html', context)
-#
 #     if request.method == 'GET':
 #         form = ProfileForm(entry)
 #         context = {'entry': entry, 'form': form}
 #         return render(request, 'socialnetwork/edit.html', context)
-#
+#     #
 #     edit_form = ProfileForm(request.POST)
 #     if not edit_form.is_valid():
 #         context = {'form': edit_form, 'entry': entry}
@@ -128,7 +131,8 @@ def delete_action_comment(request, comment_id):
 #                   'address', 'city', 'state', 'zip_code', 'country',
 #                   'email', 'phone_number']:
 #         entry[field] = edit_form.cleaned_data[field]
-#
+
+
 #     entry['updated_by'] = request.user
 #     entry['update_time'] = timezone.now()
 #
@@ -166,6 +170,50 @@ def profile_others(request):
     return render(request, 'socialnetwork/profile_others.html')
 
 
+def profile_home(request):
+    context = {}
+    context['profile'] = Profile.objects.all()
+    context['profileform'] = ProfileForm()
+    return render(request, 'socialnetwork/profile.html', context)
+
+
+def add_profile(request):
+    context = {}
+    if request.method == 'GET':
+        f = ProfileForm()
+        context = {'profileform':f}
+        return render(request, 'socialnetwork/profile.html', context)
+
+    new_profile = Profile(user=request.user)
+    profileform = ProfileForm(request.POST, request.FILES, instance=new_profile)
+
+    if not profileform.is_valid():
+        context['profileform'] = profileform
+    else:
+        # Must copy content_type into a new model field because the model
+        # FileField will not store this in the database.  (The uploaded file
+        # is actually a different object than what's return from a DB read.)
+        # pic = profileform.cleaned_data['picture']
+        profileform.save()
+        context['message'] = 'Item #{0} saved.'.format(new_profile.id)
+        context['profileform'] = ProfileForm()
+
+    context['profileform'] = Profile.objects.all()
+    return render(request, 'socialnetwork/profile.html', context)
+
+
+def delete_profile(request):
+    return render(request, 'socialnetwork/profile_others.html')
+
+
+def edit_profile(request):
+    return render(request, 'socialnetwork/profile_others.html')
+
+
+def get_photo(request):
+    return render(request, 'socialnetwork/profile_others.html')
+
+
 # @login_required
 # def create_action(request):
 #     if request.method == 'GET':
@@ -195,9 +243,6 @@ def profile_others(request):
 #     context = {'message': message, 'entry': my_entry, 'form': new_form}
 #     return render(request, 'socialnetwork/edit.html', context)
 #
-
-
-
 
 
 def login_action(request):

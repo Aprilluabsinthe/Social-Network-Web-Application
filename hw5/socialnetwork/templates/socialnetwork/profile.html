@@ -13,28 +13,65 @@
 
 {% block content %}
 <div class="container">
-    <form method="post" action="myprofile_action">
-        <div class="mycontainer_light" style="width: 50rem;">
+    <div class="mycontainer_light" style="width: 50rem;">
+        <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
+            {% for field in profileform.visible_fields %}
             <div>
-                <span >User's Picture</span>
+                {{field.label_tag}}
             </div>
-            <figure align="center">
-                <img id="id_user_picture" class="figure-img"
-                     src="https://c-ssl.duitang.com/uploads/blog/202011/30/20201130162437_d3804.thumb.1000_0.jpeg"
-                     alt="Card image cap">
-            </figure>
-
-            <textarea class="form-control" id="id_bio_input_text" ></textarea>
-
-            <div class="form-group">
-                <label>Profile Picture</label>
-                <input type="file" class="form-control-file" id="id_profile_picture">
+            <div>
+                {{field}}
             </div>
+            <div class="error">
+                {% for error in field.errors %} {{error}} {% endfor %}
+            </div>
+            {% endfor %}
+
             <div>
                 <button id="id_bio_profile_button" type="submit">Submit</button>
+                <button type="submit">Edit</button>
             </div>
-        </div>
-    </form>
+        {% csrf_token %}
+        </form>
+
+
+    </div>
+
+
+
+{% if profile %}
+    <div>
+        {% if profile.picture %}
+            <img src="{% url 'photo' profile.id %}" alt="{{profile.text}}" width="200px">
+            <br>
+        {% endif %}
+
+        {% if request.user == item.user %}
+            <form action="{% url 'delete-profile' profile.id %}" method="POST" class="delete-button-form">
+                <button class="delete-button">&#10005;</button>
+                {% csrf_token %}
+            </form>
+            <form action="{% url 'edit-profile' profile.id %}" method="GET" class="edit-button-form">
+                <button class="edit-button">&#10000;</button>
+            </form>
+        {%  endif %}
+
+        <span class="text">
+            {{profile.bio}}
+        </span>
+
+        <span class="details">
+            (id={{profile.id}},
+            user={{profile.user}})
+        </span>
+
+    </div>
+    <hr>
+{% endif %}
+
+<!--    <form method="post" action="myprofile_action">-->
+<!--        <button  type="submit">Edit</button>-->
+<!--    </form>-->
 
     <div class="card-body">
         <div>
@@ -53,8 +90,6 @@
             </ul>
         </div>
     </div>
-</div>
-
 </div>
 
 {% endblock %}
