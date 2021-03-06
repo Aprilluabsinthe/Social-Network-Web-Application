@@ -12,8 +12,44 @@
 {% endblock %}
 
 {% block content %}
+
+
+
 <div class="container">
     <div class="mycontainer_light" style="width: 50rem;">
+
+        {% if profile.id %}
+    <div>
+        {% if profile.picture %}
+            <img align="center" src="{% url 'photo' profile.id %}" width="600px">
+            <br>
+        {% endif %}
+
+        {% if request.user == profileform.user %}
+            <form action="#" method="POST" class="delete-button-form">
+                <button class="delete-button">&#10005;</button>
+                {% csrf_token %}
+            </form>
+            <form action="#" method="GET" class="edit-button-form">
+                <button class="edit-button">&#10000;</button>
+            </form>
+        {%  endif %}
+
+        <span class="text">
+            <div class = "text">Bio :</div>
+            <br>
+            {{profile.bio}}
+        </span>
+            <br>
+        <span class="dark-blue-text">
+            (id={{profile.id}},
+            user={{profile.user}})
+        </span>
+
+    </div>
+    <hr>
+{% endif %}
+
         <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
             {% for field in profileform.visible_fields %}
             <div>
@@ -38,36 +74,6 @@
     </div>
 
 
-
-{% if profile %}
-    <div>
-        {% if profile.picture %}
-            <img src="{% url 'photo' profile.id %}" alt="{{profile.text}}" width="200px">
-            <br>
-        {% endif %}
-
-        {% if request.user == item.user %}
-            <form action="{% url 'delete-profile' profile.id %}" method="POST" class="delete-button-form">
-                <button class="delete-button">&#10005;</button>
-                {% csrf_token %}
-            </form>
-            <form action="{% url 'edit-profile' profile.id %}" method="GET" class="edit-button-form">
-                <button class="edit-button">&#10000;</button>
-            </form>
-        {%  endif %}
-
-        <span class="text">
-            {{profile.bio}}
-        </span>
-
-        <span class="details">
-            (id={{profile.id}},
-            user={{profile.user}})
-        </span>
-
-    </div>
-    <hr>
-{% endif %}
 
 <!--    <form method="post" action="myprofile_action">-->
 <!--        <button  type="submit">Edit</button>-->

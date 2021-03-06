@@ -5,7 +5,7 @@ urlpatterns = [
     path('', views.home_action, name='home'),
     path('globalstream', views.home_action, name='globalstream'),
     path('followerstream', views.followerstream_action, name='followerstream'),
-    path('profile', views.profile_home, name='profile'),
+    path('profile/<int:userid>', views.get_profile, name='profile'),
     path('profile_others', views.profile_others, name='profile_others'),
     path('login', views.login_action, name='login'),
     path('logout', views.logout_action, name='logout'),
@@ -18,5 +18,6 @@ urlpatterns = [
     path('delete-profile/<int:id>', views.delete_profile, name='delete-profile'),
     path('edit-profile/<int:id>', views.edit_profile, name='edit-profile'),
     path('photo/<int:id>', views.get_photo, name='photo'),
+    path('get-profile/<int:id>', views.get_profile , name='get-profile'),
 ]
 

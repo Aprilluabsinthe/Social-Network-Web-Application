@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
@@ -181,7 +182,7 @@ def add_profile(request):
     context = {}
     if request.method == 'GET':
         f = ProfileForm()
-        context = {'profileform':f}
+        context = {'profileform': f}
         return render(request, 'socialnetwork/profile.html', context)
 
     new_profile = Profile(user=request.user)
@@ -195,11 +196,34 @@ def add_profile(request):
         # is actually a different object than what's return from a DB read.)
         # pic = profileform.cleaned_data['picture']
         profileform.save()
-        context['message'] = 'Item #{0} saved.'.format(new_profile.id)
+        context['message'] = 'Profile #{0} saved.'.format(new_profile.id)
         context['profileform'] = ProfileForm()
 
-    context['profileform'] = Profile.objects.all()
+    context['profile'] = Profile.objects.get(user=request.user)
     return render(request, 'socialnetwork/profile.html', context)
+
+
+@login_required
+def get_profile(request, userid):
+    user = User.objects.get(id=userid)
+    profileitem = Profile()
+    try:
+        profileitem = get_object_or_404(Profile, user_id=userid)
+        context = {}
+        context['profile'] = profileitem
+        context['profileform'] = ProfileForm()
+        return render(request, 'socialnetwork/profile.html', context)
+    except Http404:
+        return redirect('add-profile')
+
+
+@login_required
+def get_photo(request, id):
+    profileitem = get_object_or_404(Profile, user=id)
+    print('profileitem #{} fetched from db : {}'.format(id, profileitem.picture))
+    if not profileitem.picture:
+        raise Http404
+    return HttpResponse(profileitem.picture)
 
 
 def delete_profile(request):
@@ -207,10 +231,6 @@ def delete_profile(request):
 
 
 def edit_profile(request):
-    return render(request, 'socialnetwork/profile_others.html')
-
-
-def get_photo(request):
     return render(request, 'socialnetwork/profile_others.html')
 
 
