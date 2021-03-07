@@ -19,7 +19,8 @@
         <div>
             <img id="id_user_picture"
                  width="600px"
-                 src="https://www.brownweinraub.com/wp-content/uploads/2017/09/placeholder.jpg"></img>
+                 {% load static%}
+                 src="{}"></img>
         </div>
         <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
             {% for field in profileform.visible_fields %}
