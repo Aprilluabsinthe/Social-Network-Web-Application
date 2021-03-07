@@ -13,8 +13,8 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['bio', 'picture']
         widgets = {
-            'picture': forms.FileField(attrs={'id':'id_bio_input_text'}),
-            'bio': forms.CharField(attrs={'id': 'id_user_picture'})
+            'picture': forms.FileInput(attrs={'placeholder': 'Your Photo Here', 'id': 'id_bio_input_text'}),
+            'bio': forms.Textarea(attrs={'placeholder': 'Your Biography Here', 'id': 'id_user_picture'})
         }
 
     def clean_data(self):

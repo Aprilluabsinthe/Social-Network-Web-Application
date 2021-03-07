@@ -22,9 +22,14 @@ from socialnetwork.models import Post, Comment, Profile
 
 @login_required
 def home_action(request):
-    return render(request, 'socialnetwork/globalstream.html',
-                  {'posts': Post.objects.all(),
-                   'comments': Comment.objects.all()})
+    try:
+        postitems = Post.objects.all()
+        comments = Comment.objects.all()
+        return render(request, 'socialnetwork/globalstream.html',
+                  {'posts': postitems,
+                   'comments': comments})
+    except:
+        return render(request, 'socialnetwork/globalstream.html',{})
 
 
 @login_required
