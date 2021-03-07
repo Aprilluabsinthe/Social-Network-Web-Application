@@ -205,7 +205,7 @@ def edit_profile(request, id):
     if not profileform.is_valid():
         context = {'profile': profileitem,
                    'profileform': profileform}
-        return redirect(reverse('profile', userid=id))
+        return redirect('profile', userid=id)
 
     pic = profileform.cleaned_data['picture']
     print('Uploaded picture: {} (type={})'.format(pic, type(pic)))
