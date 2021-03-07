@@ -17,38 +17,6 @@
 <div class="container">
     <div class="mycontainer_light" style="width: 50rem;">
 
-        {% if profile.id %}
-        <div>
-            {% if profile.picture %}
-            <img align="center" id = "id_user_picture" src="{% url 'photo' profile.id %}" width="600px">
-            <br>
-            {% endif %}
-
-            {% if request.user == profileform.user %}
-            <form action="#" method="POST" class="delete-button-form">
-                <button class="delete-button">&#10005;</button>
-                {% csrf_token %}
-            </form>
-            <form action="#" method="GET" class="edit-button-form">
-                <button class="edit-button">&#10000;</button>
-            </form>
-            {% endif %}
-
-            <span class="text">
-            <div class="text">Bio :</div>
-            <span id = "id_bio_input_text"><input readonly value="{{profile.bio}}"></span>
-            <br>
-        </span>
-            <br>
-            <span class="dark-blue-text">
-            (id={{profile.id}},
-            user={{profile.user}})
-        </span>
-
-        </div>
-        <hr>
-        {% else %}
-
         <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
             {% for field in profileform.visible_fields %}
             <div>
@@ -62,7 +30,6 @@
             </div>
             {% endfor %}
 
-            {% endif %}
             <div>
                 <button id="id_bio_profile_button" type="submit">Submit</button>
                 <button type="submit">Edit</button>
