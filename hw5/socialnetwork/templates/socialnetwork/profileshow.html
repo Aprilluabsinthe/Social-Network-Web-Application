@@ -26,17 +26,17 @@
 
             {% if request.user == profileform.user %}
             <form action="#" method="POST" class="delete-button-form">
-                <button class="delete-button">&#10005;</button>
+                <button class="delete-button">delete</button>
                 {% csrf_token %}
             </form>
             <form action="#" method="GET" class="edit-button-form">
-                <button class="edit-button">&#10000;</button>
+                <button class="edit-button">edit</button>
             </form>
             {% endif %}
 
             <span class="text">
             <div class="text">Bio :</div>
-            <span id = "id_bio_input_text"><input readonly value="{{profile.bio}}"></span>
+            <span id = "id_bio_input_text"><input value="{{profile.bio}}"></span>
             <br>
         </span>
             <br>

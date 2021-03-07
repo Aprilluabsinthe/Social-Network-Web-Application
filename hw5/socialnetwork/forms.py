@@ -13,7 +13,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['bio', 'picture']
         widgets = {
-            'picture': forms.FileInput(attrs={'placeholder': "No file selected", 'id': 'id_user_picture'}),
+            'picture': forms.FileInput(attrs={'placeholder': "No file selected"}),
             'bio': forms.Textarea(attrs={'placeholder': 'Your Biography Here', 'id': 'id_bio_input_text'})
         }
 

@@ -196,17 +196,13 @@ def add_profile(request):
     if not profileform.is_valid():
         context['profileform'] = profileform
     else:
-        # Must copy content_type into a new model field because the model
-        # FileField will not store this in the database.  (The uploaded file
-        # is actually a different object than what's return from a DB read.)
-        # pic = profileform.cleaned_data['picture']
         profileform.save()
         context['message'] = 'Profile #{0} saved.'.format(new_profile.user)
         context['profileform'] = ProfileForm()
 
     context['profile'] = Profile.objects.get(user=request.user)
     # return render(request, 'socialnetwork/profile.html', context)
-    return render(request, 'socialnetwork/profileshow.html', context)
+    return redirect('profile',userid=request.user.id)
 
 
 @login_required

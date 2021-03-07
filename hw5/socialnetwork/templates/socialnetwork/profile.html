@@ -16,13 +16,17 @@
 
 <div class="container">
     <div class="mycontainer_light" style="width: 50rem;">
-
+        <div>
+            <img id="id_user_picture"
+                 width="600px"
+                 src="https://www.brownweinraub.com/wp-content/uploads/2017/09/placeholder.jpg"></img>
+        </div>
         <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
             {% for field in profileform.visible_fields %}
             <div>
                 {{field.label_tag}}
             </div>
-            <div id="{{field.id_for_label}}">
+            <div>
                 {{field}}
             </div>
             <div class="error">
