@@ -59,7 +59,7 @@
         <!-- Post Content Column -->
         <span class="col-lg">Published by
             <p class="lead">
-                <a href="{% url 'profile' user.id %}">
+                <a href="{% url 'profile' post.user.id %}">
                     <span class="message"
                           id="id_post_profile_{{post.id}}">
                         {{post.user.first_name}} {{post.user.last_name}}

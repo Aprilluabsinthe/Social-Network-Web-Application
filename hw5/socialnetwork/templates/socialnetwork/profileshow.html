@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block page-name %}
-<h1><span id="id_page_name">Profile Page For {{user.first_name}} {{user.last_name}}</span></h1>
+<h1><span id="id_page_name">Profile Page For {{profile.user.first_name}} {{profile.user.last_name}}</span></h1>
 {% endblock %}
 
 {% block content %}
@@ -16,18 +16,19 @@
 
 <div class="container">
     <div class="mycontainer_light" style="width: 50rem;">
+        <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
 
+        {% if profile.user != user %}
+        <br>
+        {{profileform.bio}}
+        <div>
+            <button id="id_follow" type="submit">Follow
+            </button>
+        </div>
 
+        {% else%}
         <form enctype="multipart/form-data" method="POST" action="{% url 'edit-profile' user.id %}">
-            {% if profile.id %}
-            <div>
-
-                <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
-                <br>
-                {% endif %}
-
-                <span class="text">
-
+            <span class="text">
                 {% for field in profileform.visible_fields %}
             <div>
                 {{field.label_tag}}
@@ -40,28 +41,23 @@
             </div>
             {% endfor %}
             {% csrf_token %}
-
-
-            <br>
-        </span>
-                <br>
-                <span class="dark-blue-text">
+            </span>
+            <span class="dark-blue-text">
             (id={{profile.id}},
             user={{profile.user}})
-        </span>
+            </span>
 
-            </div>
             <hr>
 
-            <!--        <form>-->
+
             <div>
                 <button id="id_update_profile_button" type="submit">Submit
                 </button>
             </div>
             {% csrf_token %}
-            <!--        </form>-->
-        </form>
 
+        </form>
+        {% endif%}
     </div>
 
 
