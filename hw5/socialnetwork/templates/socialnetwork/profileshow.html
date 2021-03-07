@@ -36,7 +36,7 @@
 
             <span class="text">
             <div class="text">Bio :</div>
-            <span id = "id_bio_input_text"><input readonly value="{{profile.bio}}"></span>
+            <span><input id = "id_bio_input_text" value="{{profile.bio}}"></span>
             <br>
         </span>
             <br>
@@ -50,8 +50,8 @@
         {% endif %}
         <form>
             <div>
-                <button id="id_bio_profile_button" type="submit">Submit</button>
-                <button type="submit">Edit</button>
+<!--                <button id="id_bio_profile_button" type="submit" action="{% url 'edit-profile' profile.id %}">Submit</button>-->
+<!--                <button type="submit" action="{% url 'edit-pic' item.id %}">Edit</button>-->
             </div>
             {% csrf_token %}
         </form>
