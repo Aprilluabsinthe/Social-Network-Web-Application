@@ -205,7 +205,8 @@ def add_profile(request):
         context['profileform'] = ProfileForm()
 
     context['profile'] = Profile.objects.get(user=request.user)
-    return render(request, 'socialnetwork/profile.html', context)
+    # return render(request, 'socialnetwork/profile.html', context)
+    return render(request, 'socialnetwork/profileshow.html', context)
 
 
 @login_required
@@ -217,7 +218,7 @@ def get_profile(request, userid):
         context = {}
         context['profile'] = profileitem
         context['profileform'] = ProfileForm()
-        return render(request, 'socialnetwork/profile.html', context)
+        return render(request, 'socialnetwork/profileshow.html', context)
     except Http404:
         return redirect('add-profile')
 
