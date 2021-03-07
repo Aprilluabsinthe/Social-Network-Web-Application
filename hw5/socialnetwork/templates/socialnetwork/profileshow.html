@@ -20,7 +20,7 @@
         {% if profile.id %}
         <div>
             {% if profile.picture %}
-            <img align="center" id = "id_user_picture" src="{% url 'photo' profile.id %}" width="600px">
+            <img align="center" id = "id_profile_picture" src="{% url 'photo' profile.id %}" width="600px">
             <br>
             {% endif %}
 
@@ -48,6 +48,7 @@
         </div>
         <hr>
         {% endif %}
+        <form>
             <div>
                 <button id="id_bio_profile_button" type="submit">Submit</button>
                 <button type="submit">Edit</button>
