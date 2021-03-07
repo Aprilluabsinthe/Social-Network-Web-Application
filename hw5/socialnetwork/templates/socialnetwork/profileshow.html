@@ -15,12 +15,13 @@
 
 
 <div class="container">
-    <div class="mycontainer_light" style="width: 50rem;">
+    <div style="width: 70%;" align="center" class="mycontainer_light" style="width: 50rem;">
         <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
 
         {% if profile.user != user %}
         <br>
-        {{profileform.bio}}
+        <input align="center" class="form-control-sm" readonly align="center" id="id_user_bio"
+                  value="{{profile.bio}}" >
         <div>
             <button id="id_follow" type="submit">Follow
             </button>

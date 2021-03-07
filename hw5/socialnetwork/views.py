@@ -175,10 +175,18 @@ def get_profile(request, userid):
 @login_required
 def get_photo(request, id):
     profileitem = get_object_or_404(Profile, id=id)
-    print('profileitem #{} fetched from db : {}'.format(id, profileitem.picture))
+    print('profileitem picture#{} fetched from db : {}'.format(id, profileitem.picture))
     if not profileitem.picture:
         raise Http404
     return HttpResponse(profileitem.picture)
+
+@login_required
+def get_bio(request, id):
+    profileitem = get_object_or_404(Profile, id=id)
+    print('profileitem biography#{} fetched from db : {}'.format(id, profileitem.bio))
+    if not profileitem.bio:
+        raise Http404
+    return HttpResponse(profileitem.bio)
 
 
 def delete_profile(request):

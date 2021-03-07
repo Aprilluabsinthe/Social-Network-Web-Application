@@ -10,7 +10,7 @@ urlpatterns = [
     path('login', views.login_action, name='login'),
     path('logout', views.logout_action, name='logout'),
     path('register', views.register_action, name='register'),
-    path('makepost',views.makepost, name='makepost'),
+    path('makepost', views.makepost, name='makepost'),
     path('makecomment', views.makecomment, name='makecomment'),
     path('delete-post/<int:post_id>', views.delete_action_post, name='delete-post'),
     path('delete-comment/<int:id>', views.delete_action_comment, name='delete-comment'),
@@ -18,7 +18,8 @@ urlpatterns = [
     path('delete-profile/<int:id>', views.delete_profile, name='delete-profile'),
     path('edit-profile/<int:id>', views.edit_profile, name='edit-profile'),
     path('photo/<int:id>', views.get_photo, name='photo'),
-    path('get-profile/<int:id>', views.get_profile , name='get-profile'),
-    path('edit-profile/<int:id>', views.edit_profile , name='edit-profile'),
-]
+    path('get-profile/<int:id>', views.get_profile, name='get-profile'),
+    path('edit-profile/<int:id>', views.edit_profile, name='edit-profile'),
+    path('personalinfo/<int:id>', views.get_bio, name='personalinfo'),
 
+]
