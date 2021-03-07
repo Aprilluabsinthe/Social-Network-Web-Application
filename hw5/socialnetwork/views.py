@@ -221,7 +221,7 @@ def get_profile(request, userid):
 
 @login_required
 def get_photo(request, id):
-    profileitem = get_object_or_404(Profile, user=id)
+    profileitem = get_object_or_404(Profile, id=id)
     print('profileitem #{} fetched from db : {}'.format(id, profileitem.picture))
     if not profileitem.picture:
         raise Http404
