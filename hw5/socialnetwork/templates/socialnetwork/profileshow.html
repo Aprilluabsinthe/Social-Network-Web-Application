@@ -17,16 +17,18 @@
 <div class="container">
     <div class="mycontainer_light" style="width: 50rem;">
 
-        {% if profile.id %}
-        <div>
 
-            <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
-            <br>
-            {% endif %}
-
-            <span class="text">
         <form enctype="multipart/form-data" method="POST" action="{% url 'edit-profile' user.id %}">
-            {% for field in profileform.visible_fields %}
+            {% if profile.id %}
+            <div>
+
+                <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
+                <br>
+                {% endif %}
+
+                <span class="text">
+
+                {% for field in profileform.visible_fields %}
             <div>
                 {{field.label_tag}}
             </div>
@@ -42,22 +44,22 @@
 
             <br>
         </span>
-            <br>
-            <span class="dark-blue-text">
+                <br>
+                <span class="dark-blue-text">
             (id={{profile.id}},
             user={{profile.user}})
         </span>
 
-        </div>
-        <hr>
+            </div>
+            <hr>
 
-<!--        <form>-->
+            <!--        <form>-->
             <div>
-                <button id="id_update_profile_button" type="submit" >Submit
+                <button id="id_update_profile_button" type="submit">Submit
                 </button>
             </div>
             {% csrf_token %}
-<!--        </form>-->
+            <!--        </form>-->
         </form>
 
     </div>
