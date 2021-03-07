@@ -178,7 +178,8 @@ def get_photo(request, id):
     print('profileitem picture#{} fetched from db : {}'.format(id, profileitem.picture))
     if not profileitem.picture:
         raise Http404
-    return HttpResponse(profileitem.picture)
+    return HttpResponse(profileitem.picture, content_type='image/jpeg')
+
 
 @login_required
 def get_bio(request, id):
