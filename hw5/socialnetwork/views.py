@@ -201,7 +201,7 @@ def add_profile(request):
         # is actually a different object than what's return from a DB read.)
         # pic = profileform.cleaned_data['picture']
         profileform.save()
-        context['message'] = 'Profile #{0} saved.'.format(new_profile.id)
+        context['message'] = 'Profile #{0} saved.'.format(new_profile.user)
         context['profileform'] = ProfileForm()
 
     context['profile'] = Profile.objects.get(user=request.user)
