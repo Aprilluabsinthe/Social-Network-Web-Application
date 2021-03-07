@@ -19,8 +19,8 @@
         <div>
             <img id="id_user_picture"
                  width="600px"
-                 {% load static%}
-                 src="{}"></img>
+                 {% load static %}
+                 src="{static 'media/placeholder.jpg'}"></img>
         </div>
         <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
             {% for field in profileform.visible_fields %}
