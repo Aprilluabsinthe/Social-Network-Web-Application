@@ -12,6 +12,10 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['bio', 'picture']
+        widgets = {
+            'picture': forms.FileField(attrs={'id':'id_bio_input_text'}),
+            'bio': forms.CharField(attrs={'id': 'id_user_picture'})
+        }
 
     def clean_data(self):
         picture = self.cleaned_data['picture']
