@@ -26,10 +26,10 @@ def home_action(request):
         postitems = Post.objects.all()
         comments = Comment.objects.all()
         return render(request, 'socialnetwork/globalstream.html',
-                  {'posts': postitems,
-                   'comments': comments})
+                      {'posts': postitems,
+                       'comments': comments})
     except:
-        return render(request, 'socialnetwork/globalstream.html',{})
+        return render(request, 'socialnetwork/globalstream.html', {})
 
 
 @login_required
@@ -121,53 +121,6 @@ def delete_action_comment(request, comment_id):
         return redirect('home')
 
 
-# @login_required
-# def edit_action(request, id):
-#     if request.method == 'GET':
-#         form = ProfileForm(entry)
-#         context = {'entry': entry, 'form': form}
-#         return render(request, 'socialnetwork/edit.html', context)
-#     #
-#     edit_form = ProfileForm(request.POST)
-#     if not edit_form.is_valid():
-#         context = {'form': edit_form, 'entry': entry}
-#         return render(request, 'socialnetwork/edit.html', context)
-#
-#     for field in ['last_name', 'first_name', 'birthday', 'children',
-#                   'address', 'city', 'state', 'zip_code', 'country',
-#                   'email', 'phone_number']:
-#         entry[field] = edit_form.cleaned_data[field]
-
-
-#     entry['updated_by'] = request.user
-#     entry['update_time'] = timezone.now()
-#
-#     ENTRY_LIST.update(entry)
-#
-#     message = 'Entry Updated'
-#     context = {'message': message, 'entry': entry, 'form': edit_form}
-#     return render(request, 'socialnetwork/edit.html', context)
-#
-#     context = {'posts': Post.objects.all()}
-#
-#     if request.method != 'POST':
-#         context['error'] = 'Editions must be done using the POST method'
-#         return render(request, 'socialnetwork/globalstream.html', context)
-#
-#     # Deletes the item if present in the database.
-#     try:
-#         post_to_edit = Post.objects.get(id=post_id)
-#         if request.user.username != post_to_edit.user.username:
-#             context['error'] = 'You can only edit Posts you have created.'
-#             return redirect('home')
-#
-#         post_to_edit[]
-#         return redirect('home')
-#     except ObjectDoesNotExist:
-#         context['error'] = 'The item did not exist in the To Do List.'
-#         return redirect('home')
-#
-#
 def myprofile_action(request):
     return render(request, 'socialnetwork/profile.html')
 
@@ -202,7 +155,7 @@ def add_profile(request):
 
     context['profile'] = Profile.objects.get(user=request.user)
     # return render(request, 'socialnetwork/profile.html', context)
-    return redirect('profile',userid=request.user.id)
+    return redirect('profile', userid=request.user.id)
 
 
 @login_required
@@ -213,7 +166,7 @@ def get_profile(request, userid):
         profileitem = get_object_or_404(Profile, user_id=userid)
         context = {}
         context['profile'] = profileitem
-        context['profileform'] = ProfileForm()
+        context['profileform'] = ProfileForm(initial={'bio': profileitem.bio, 'picture': profileitem.picture})
         return render(request, 'socialnetwork/profileshow.html', context)
     except Http404:
         return redirect('add-profile')
@@ -232,39 +185,38 @@ def delete_profile(request):
     return render(request, 'socialnetwork/profile_others.html')
 
 
-def edit_profile(request):
-    return render(request, 'socialnetwork/profile_others.html')
+@login_required
+def edit_profile(request, id):
+    context = {}
+    user = User.objects.get(id=id)
+    profileitem = get_object_or_404(Profile, user_id=id)
 
+    if request.user != profileitem.user:
+        context = {'message': 'You can only edit items you have created.'}
+        return render(request, 'socialnetwork/profileshow.html', context)
 
-# @login_required
-# def create_action(request):
-#     if request.method == 'GET':
-#         context = {'form': ProfileForm()}
-#         return render(request, 'socialnetwork/create.html', context)
-#
-#     form = ProfileForm(request.POST)
-#     if not form.is_valid():
-#         context = {'form': form}
-#         return render(request, 'socialnetwork/create.html', context)
-#
-#     my_entry = {}
-#     for field in ['last_name', 'first_name', 'birthday', 'children',
-#                   'address', 'city', 'state', 'zip_code', 'country',
-#                   'email', 'phone_number']:
-#         my_entry[field] = form.cleaned_data[field]
-#
-#     my_entry['created_by'] = request.user
-#     my_entry['creation_time'] = timezone.now()
-#     my_entry['updated_by'] = request.user
-#     my_entry['update_time'] = timezone.now()
-#
-#     ENTRY_LIST.create(my_entry)
-#
-#     message = 'Entry created'
-#     new_form = ProfileForm(my_entry)
-#     context = {'message': message, 'entry': my_entry, 'form': new_form}
-#     return render(request, 'socialnetwork/edit.html', context)
-#
+    if request.method == 'GET':
+        context = {'profile': profileitem,
+                   'profileform': ProfileForm(initial={'bio': profileitem.bio, 'picture': profileitem.picture})}
+        return render(request, 'socialnetwork/profileshow.html', context)
+
+    profileform = ProfileForm(request.POST, request.FILES)
+    print("upload successfully")
+    if not profileform.is_valid():
+        context = {'profile': profileitem,
+                   'profileform': profileform}
+        return redirect(reverse('profile', userid=id))
+
+    pic = profileform.cleaned_data['picture']
+    print('Uploaded picture: {} (type={})'.format(pic, type(pic)))
+
+    profileitem.picture = profileform.cleaned_data['picture']
+    profileitem.bio = profileform.cleaned_data['bio']
+    profileitem.save()
+
+    context['profile'] = Profile.objects.get(user_id=id)
+    # return render(request, 'socialnetwork/profile.html', context)
+    return redirect('profile', userid=request.user.id)
 
 
 def login_action(request):

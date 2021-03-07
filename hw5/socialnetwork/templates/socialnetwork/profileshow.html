@@ -19,24 +19,27 @@
 
         {% if profile.id %}
         <div>
-            {% if profile.picture %}
-            <img align="center" id = "id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
+
+            <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
             <br>
             {% endif %}
 
-            {% if request.user == profileform.user %}
-            <form action="#" method="POST" class="delete-button-form">
-                <button class="delete-button">delete</button>
-                {% csrf_token %}
-            </form>
-            <form action="#" method="GET" class="edit-button-form">
-                <button class="edit-button">edit</button>
-            </form>
-            {% endif %}
-
             <span class="text">
-            <div class="text">Bio :</div>
-            <span><input id = "id_bio_input_text" value="{{profile.bio}}"></span>
+        <form enctype="multipart/form-data" method="POST" action="{% url 'edit-profile' user.id %}">
+            {% for field in profileform.visible_fields %}
+            <div>
+                {{field.label_tag}}
+            </div>
+            <div>
+                {{field }}
+            </div>
+            <div class="error">
+                {% for error in field.errors %} {{error}} {% endfor %}
+            </div>
+            {% endfor %}
+            {% csrf_token %}
+
+
             <br>
         </span>
             <br>
@@ -47,15 +50,15 @@
 
         </div>
         <hr>
-        {% endif %}
-        <form>
+
+<!--        <form>-->
             <div>
-<!--                <button id="id_bio_profile_button" type="submit" action="{% url 'edit-profile' profile.id %}">Submit</button>-->
-<!--                <button type="submit" action="{% url 'edit-pic' item.id %}">Edit</button>-->
+                <button id="id_update_profile_button" type="submit" >Submit
+                </button>
             </div>
             {% csrf_token %}
+<!--        </form>-->
         </form>
-
 
     </div>
 

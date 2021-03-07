@@ -19,5 +19,6 @@ urlpatterns = [
     path('edit-profile/<int:id>', views.edit_profile, name='edit-profile'),
     path('photo/<int:id>', views.get_photo, name='photo'),
     path('get-profile/<int:id>', views.get_profile , name='get-profile'),
+    path('edit-profile/<int:id>', views.edit_profile , name='edit-profile'),
 ]
 
