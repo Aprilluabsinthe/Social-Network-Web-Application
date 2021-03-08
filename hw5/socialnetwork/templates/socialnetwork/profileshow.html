@@ -23,7 +23,7 @@
         <input align="center" class="form-control-sm" readonly align="center" id="id_user_bio"
                   value="{{profile.bio}}" >
         <div>
-            {% if profile.user not in friends %}
+            {% if follow_action == 'Follow' %}
             <form method="POST" action="{% url 'changefollow' profile.user.id%}">
                {% csrf_token %}
                 <button id="id_follow" type="submit">{{follow_action}}</button>

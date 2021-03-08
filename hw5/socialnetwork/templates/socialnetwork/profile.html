@@ -45,9 +45,6 @@
 
         {% else %}
         <br>
-        <input align="center" class="form-control-sm" readonly align="center" id="id_user_bio"
-                  value="{{profile.bio}}" >
-
         <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
             {% for field in profileform.visible_fields %}
             <div>
