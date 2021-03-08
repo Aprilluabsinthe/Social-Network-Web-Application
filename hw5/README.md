@@ -12,6 +12,8 @@
    * https://docs.djangoproject.com/en/1.8/_modules/django/template/base/
    * https://stackoverflow.com/questions/1387727/checking-for-empty-queryset-in-django
    * https://stackoverflow.com/questions/9304908/how-can-i-filter-a-django-query-with-a-list-of-values
+   * https://stackoverflow.com/questions/3507958/how-can-i-make-an-entire-html-form-readonly
+   * https://docs.djangoproject.com/en/3.1/ref/models/fields/
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this
