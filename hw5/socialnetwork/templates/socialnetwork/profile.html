@@ -45,25 +45,17 @@
 
     </div>
 
-
-    <!--    <form method="post" action="myprofile_action">-->
-    <!--        <button  type="submit">Edit</button>-->
-    <!--    </form>-->
-
     <div class="card-body">
         <div>
             <p>You are following:</p>
             <ul>
-                {% load static %}
+                {% for friend in friends %}
                 <li>
-                    <a href="{% url 'profile_others' %}" id="id_profile_link_ppkrit">Ashly Ash</a>
+                    <a href="{% url 'profile' friend.id %}" id="id_profile_link_{{friend.id}}">
+                        {{friend.first_name}} {{friend.last_name}}
+                    </a>
                 </li>
-                <li>
-                    <a href="{% url 'profile_others'%}" id="id_profile_link_billkin">Billkin Puttipong</a>
-                </li>
-                <li>
-                    <a href="{% url 'profile_others' %}" id="id_profile_link_aduso">Aduso Qu</a>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>

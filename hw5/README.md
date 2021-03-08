@@ -10,6 +10,8 @@
    * https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
    * https://stackoverflow.com/questions/36153748/django-makemigrations-no-changes-detected
    * https://docs.djangoproject.com/en/1.8/_modules/django/template/base/
+   * https://stackoverflow.com/questions/1387727/checking-for-empty-queryset-in-django
+   * https://stackoverflow.com/questions/9304908/how-can-i-filter-a-django-query-with-a-list-of-values
 8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this

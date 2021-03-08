@@ -34,7 +34,14 @@ def home_action(request):
 
 @login_required
 def followerstream_action(request):
-    postitems = Post.objects.all()
+    friends = Friendship.objects.filter(user_id=request.user.id)
+    print(friends)
+    seeonly = []
+    if friends.exists():
+        for friend in friends:
+            seeonly.append(friend.friend)
+    print(seeonly)
+    postitems = Post.objects.filter(user__in=seeonly)
     comments = Comment.objects.all()
     return render(request, 'socialnetwork/followerstream.html',
                   {'posts': postitems,
@@ -122,10 +129,6 @@ def delete_action_comment(request, comment_id):
         return redirect('home')
 
 
-def myprofile_action(request):
-    return render(request, 'socialnetwork/profile.html')
-
-
 def profile_others(request):
     return render(request, 'socialnetwork/profile_others.html')
 
@@ -139,9 +142,16 @@ def profile_home(request):
 
 def add_profile(request):
     context = {}
+    friendsets = Friendship.objects.filter(user_id=request.user.id)
+    if friendsets:
+        context['friends'] = []
+        for friend in friendsets:
+            context['friends'].append(friend.friend)
+            print(context['friends'])
+
     if request.method == 'GET':
         f = ProfileForm()
-        context = {'profileform': f}
+        context['profileform'] = f
         return render(request, 'socialnetwork/profile.html', context)
 
     new_profile = Profile(user=request.user)
@@ -153,9 +163,7 @@ def add_profile(request):
         profileform.save()
         context['message'] = 'Profile #{0} saved.'.format(new_profile.user)
         context['profileform'] = ProfileForm()
-
     context['profile'] = Profile.objects.get(user=request.user)
-    # return render(request, 'socialnetwork/profile.html', context)
     return redirect('profile', userid=request.user.id)
 
 
@@ -177,11 +185,10 @@ def get_profile(request, userid):
         else:
             friendsets = Friendship.objects.filter(user_id=request.user.id)
             if friendsets:
-                print(friendsets)
+
                 context['friends'] = []
                 for friend in friendsets:
                     context['friends'].append(friend.friend)
-                    print(context['friends'])
         print(context)
         return render(request, 'socialnetwork/profileshow.html', context)
     except Http404:
