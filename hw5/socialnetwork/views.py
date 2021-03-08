@@ -177,7 +177,9 @@ def get_profile(request, userid):
         profileitem = get_object_or_404(Profile, user_id=userid)
         context = {}
         context['profile'] = profileitem
-        context['profileform'] = ProfileForm(initial={'bio': profileitem.bio, 'picture': profileitem.picture})
+        context['profileform'] = ProfileForm(
+            initial={'bio': profileitem.bio, 'picture': profileitem.picture})
+
         if userid != request.user.id:
             friendship = Friendship.objects.filter(user_id=request.user.id, friend_id=userid)
             if friendship.exists():
@@ -193,7 +195,9 @@ def get_profile(request, userid):
                     context['friends'].append(friend.friend)
         print(context)
         return render(request, 'socialnetwork/profileshow.html', context)
+
     except Http404:
+        print("some exception happends, redirect to my profile")
         return redirect('add-profile')
 
 
