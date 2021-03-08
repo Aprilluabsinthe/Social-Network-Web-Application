@@ -73,7 +73,7 @@
             <ul>
                 {% for friend in friends %}
                 <li>
-                    <a href="{% url 'profile' friend.id %}" id="id_profile_link_{{friend.id}}">
+                    <a href="{% url 'profile' friend.id %}" id="id_profile_link_{{friend.username}}">
                         {{friend.first_name}} {{friend.last_name}}
                     </a>
                 </li>
