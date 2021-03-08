@@ -19,7 +19,7 @@ class Post(models.Model):
     # commented_by = models.ForeignKey("Comment", blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'id=' + str(self.id) + ',user="' + self.user.username + ',first_name="' + self.first_name + '"'
+        return 'id=' + str(self.id) + ',user="' + self.user.username
 
 
 class Comment(models.Model):
