@@ -28,7 +28,7 @@
             <input align="center" class="form-control" readonly align="center" id="id_user_bio"
                   value="the user hasn't input his biography" >
             <div>
-                {% if profile.user not in friends %}
+                {% if follow_action == 'Follow' %}
             <form method="POST" action="{% url 'changefollow' profile.user.id %}">
                {% csrf_token %}
                 <button id="id_follow" type="submit">{{follow_action}}</button>
