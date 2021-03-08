@@ -23,8 +23,8 @@ from socialnetwork.models import Post, Comment, Profile, Friendship
 @login_required
 def home_action(request):
     try:
-        postitems = Post.objects.all()
-        comments = Comment.objects.all()
+        postitems = Post.objects.all().order_by('-time')
+        comments = Comment.objects.all().order_by('-time')
         return render(request, 'socialnetwork/globalstream.html',
                       {'posts': postitems,
                        'comments': comments})
@@ -41,8 +41,8 @@ def followerstream_action(request):
         for friend in friends:
             seeonly.append(friend.friend)
     print(seeonly)
-    postitems = Post.objects.filter(user__in=seeonly)
-    comments = Comment.objects.all()
+    postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
+    comments = Comment.objects.all().order_by('-time')
     return render(request, 'socialnetwork/followerstream.html',
                   {'posts': postitems,
                    'comments': comments})
@@ -61,7 +61,9 @@ def makepost(request):
     if 'post' not in request.POST or not request.POST['post']:
         context['error'] = 'You must enter an content of a post'
         return render(request, 'socialnetwork/globalstream.html', context)
-    context = {'posts': Post.objects.all()}
+
+    context = {'posts': Post.objects.all().order_by('-time')}
+    print(context)
     new_post = Post(user=request.user,
                     content=request.POST['post'])
     new_post.save()
@@ -72,12 +74,12 @@ def makepost(request):
 def makecomment(request):
     if not request.user:
         return render(request, 'socialnetwork/globalstream.html', {})
-    context = {'posts': Post.objects.all()}
+    context = {'posts': Post.objects.all().order_by('-time')}
     if 'comment' not in request.POST or not request.POST['comment']:
         context['error'] = 'You must enter an content of a comment'
         return render(request, 'socialnetwork/globalstream.html', context)
 
-    context = {'comments': Comment.objects.all()}
+    context = {'comments': Comment.objects.all().order_by('-time')}
     new_comment = Comment(user=request.user,
                           content=request.POST['comment'],
                           )
