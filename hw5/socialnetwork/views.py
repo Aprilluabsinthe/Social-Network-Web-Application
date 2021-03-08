@@ -144,6 +144,11 @@ def profile_home(request):
 
 def add_profile(request):
     context = {}
+    print(request.user)
+    new_profile = Profile(user=request.user)
+    print(new_profile)
+    profileform = ProfileForm(request.POST, request.FILES, instance=new_profile)
+
     friendsets = Friendship.objects.filter(user_id=request.user.id)
     if friendsets:
         context['friends'] = []
@@ -153,61 +158,77 @@ def add_profile(request):
 
     if request.method == 'GET':
         f = ProfileForm()
-        context['profileform'] = f
+        context['profile'] = new_profile
+        context['profileform'] = ProfileForm()
+        print("method is GET")
+        print(context)
         return render(request, 'socialnetwork/profile.html', context)
-
-    new_profile = Profile(user=request.user)
-    profileform = ProfileForm(request.POST, request.FILES, instance=new_profile)
 
     if not profileform.is_valid():
         context['profileform'] = profileform
+
     else:
         profileform.save()
         context['message'] = 'Profile #{0} saved.'.format(new_profile.user)
         context['profileform'] = ProfileForm()
     context['profile'] = Profile.objects.get(user=request.user)
+    # return render(request, 'socialnetwork/profileshow.html', context)
     return redirect('profile', userid=request.user.id)
 
 
 @login_required
 def get_profile(request, userid):
-    user = User.objects.get(id=userid)
-    profileitem = Profile()
+    context = {}
+
+    if userid != request.user.id:
+        friendship = Friendship.objects.filter(user_id=request.user.id, friend_id=userid)
+        if friendship.exists():
+            context['follow_action'] = 'Unfollow'
+        else:
+            context['follow_action'] = 'Follow'
+    else:
+        friendsets = Friendship.objects.filter(user_id=request.user.id)
+        if friendsets:
+            context['friends'] = []
+            for friend in friendsets:
+                context['friends'].append(friend.friend)
+    print(context)
+
     try:
         profileitem = get_object_or_404(Profile, user_id=userid)
-        context = {}
         context['profile'] = profileitem
         context['profileform'] = ProfileForm(
             initial={'bio': profileitem.bio, 'picture': profileitem.picture})
-
-        if userid != request.user.id:
-            friendship = Friendship.objects.filter(user_id=request.user.id, friend_id=userid)
-            if friendship.exists():
-                context['follow_action'] = 'Unfollow'
-            else:
-                context['follow_action'] = 'Follow'
-        else:
-            friendsets = Friendship.objects.filter(user_id=request.user.id)
-            if friendsets:
-
-                context['friends'] = []
-                for friend in friendsets:
-                    context['friends'].append(friend.friend)
-        print(context)
+        print("got profile file")
         return render(request, 'socialnetwork/profileshow.html', context)
-
     except Http404:
-        print("some exception happends, redirect to my profile")
-        return redirect('add-profile')
+        if userid == request.user.id:
+            print("redirect to add my profile")
+            return redirect('add-profile')
+        else:
+            profileitem = Profile(user_id=userid)
+            context['profile'] = profileitem
+            context['profileform'] = ProfileForm()
+        return render(request, 'socialnetwork/profile.html', context)
+
+    # except Http404:
+    #     if userid == request.user.id:
+    #         print("redirect to add my profile")
+    #         return redirect('add-profile')
+    #     else:
+    #         profileitem = Profile(user_id=userid)
+    #         context['profileform'] = ProfileForm()
+    #         return render(request, 'socialnetwork/profile.html', {})
 
 
 @login_required
 def get_photo(request, id):
-    profileitem = get_object_or_404(Profile, id=id)
-    print('profileitem picture#{} fetched from db : {}'.format(id, profileitem.picture))
-    if not profileitem.picture:
-        raise Http404
-    return HttpResponse(profileitem.picture, content_type='image/jpeg/jpg/png')
+    try:
+        profileitem = get_object_or_404(Profile, id=id)
+        print('profileitem picture#{} fetched from db : {}'.format(id, profileitem.picture))
+        return HttpResponse(profileitem.picture, content_type='image/jpeg/jpg/png')
+    except:
+        return HttpResponse('static/media/placeholder.jpg', content_type='image/jpeg/jpg/png')
 
 
 @login_required
