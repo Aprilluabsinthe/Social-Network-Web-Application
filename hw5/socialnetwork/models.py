@@ -9,7 +9,7 @@ class Profile(models.Model):
     friends = models.ManyToManyField("Profile", blank=True)
 
     def __str__(self):
-        return 'id=' + str(self.id) + 'user="' + self.user.username + '"'
+        return 'id=' + str(self.id) + ', user="' + self.user.username + '"'
 
 
 class Post(models.Model):
@@ -31,9 +31,9 @@ class Comment(models.Model):
         return 'id=' + str(self.id) + ',user="' + self.user.username + ',first_name="' + self.first_name + '"'
 
 
-class Friend(models.Model):
-    to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
-    from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+class Friendship(models.Model):
+    user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
+    friend = models.ForeignKey(User, related_name='friend', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} follows {}".format(self.from_user.username, self.to_user.username)
+        return "{} follows {}".format(self.user.username, self.friend.username)

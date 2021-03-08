@@ -14,7 +14,7 @@ from django.utils import timezone
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
 # from socialnetwork.MyMemoryList import MyMemoryList
-from socialnetwork.models import Post, Comment, Profile
+from socialnetwork.models import Post, Comment, Profile, Friendship
 
 
 # ENTRY_LIST = MyMemoryList()
@@ -34,15 +34,16 @@ def home_action(request):
 
 @login_required
 def followerstream_action(request):
-    return render(request, 'socialnetwork/followerstream.html')
+    postitems = Post.objects.all()
+    comments = Comment.objects.all()
+    return render(request, 'socialnetwork/followerstream.html',
+                  {'posts': postitems,
+                   'comments': comments})
 
 
 @login_required
 def globalstream_action(request):
-    if request.method == 'GET':
-        return render(request, 'socialnetwork/globalstream.html', {})
-
-    return render(request, 'socialnetwork/globalstream.html', {})
+    return redirect('home')
 
 
 @login_required
@@ -167,6 +168,21 @@ def get_profile(request, userid):
         context = {}
         context['profile'] = profileitem
         context['profileform'] = ProfileForm(initial={'bio': profileitem.bio, 'picture': profileitem.picture})
+        if userid != request.user.id:
+            friendship = Friendship.objects.filter(user_id=request.user.id, friend_id=userid)
+            if friendship.exists():
+                context['follow_action'] = 'Unfollow'
+            else:
+                context['follow_action'] = 'Follow'
+        else:
+            friendsets = Friendship.objects.filter(user_id=request.user.id)
+            if friendsets:
+                print(friendsets)
+                context['friends'] = []
+                for friend in friendsets:
+                    context['friends'].append(friend.friend)
+                    print(context['friends'])
+        print(context)
         return render(request, 'socialnetwork/profileshow.html', context)
     except Http404:
         return redirect('add-profile')
@@ -226,6 +242,33 @@ def edit_profile(request, id):
     context['profile'] = Profile.objects.get(user_id=id)
     # return render(request, 'socialnetwork/profile.html', context)
     return redirect('profile', userid=request.user.id)
+
+
+@login_required
+def changefollow(request, id):
+    if request.method == "GET":
+        return redirect('profile', userid=id)
+    user = User.objects.get(id=request.user.id)
+    friend_user = User.objects.get(id=id)
+    f = Friendship.objects.filter(user=request.user, friend=friend_user)
+    if f.exists():
+        f.delete()
+        print("delete friendship {} to {}".format(request.user.username, friend_user))
+        return redirect('profile', userid=id)
+    else:
+        friendship = Friendship.objects.create(user=user, friend=friend_user)
+        print("add friendship {} to {}".format(request.user.username, friend_user))
+        friendship.save()
+        return redirect('profile', userid=id)
+
+
+def get_friend(request, id):
+    if request.method == "GET":
+        return redirect('profile', userid=id)
+    user = User.objects.get(id=request.user.id)
+    friend_user = User.objects.get(id=id)
+    f = Friendship.objects.filter(user=request.user, friend=friend_user)
+    return HttpResponse(f)
 
 
 def login_action(request):

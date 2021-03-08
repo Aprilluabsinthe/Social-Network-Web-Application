@@ -15,19 +15,23 @@
 
 
 <div class="container">
-    <div style="width: 70%;" align="center" class="mycontainer_light" style="width: 50rem;">
+    <div style="width: 70%;" class="mycontainer_light" style="width: 50rem;">
         <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
 
-        {% if profile.user != user %}
+    {% if profile.user != user %}
         <br>
         <input align="center" class="form-control-sm" readonly align="center" id="id_user_bio"
                   value="{{profile.bio}}" >
         <div>
-            <button id="id_follow" type="submit">Follow
-            </button>
+
+            <form method="POST" action="{% url 'changefollow' profile.user.id%}">
+               {% csrf_token %}
+                <button id="id_follow" type="submit">{{follow_action}}</button>
+            </form>
+
         </div>
 
-        {% else%}
+    {% else%}
         <form enctype="multipart/form-data" method="POST" action="{% url 'edit-profile' user.id %}">
             <span class="text">
                 {% for field in profileform.visible_fields %}
@@ -50,7 +54,6 @@
 
             <hr>
 
-
             <div>
                 <button id="id_update_profile_button" type="submit">Submit
                 </button>
@@ -63,20 +66,17 @@
         <div>
             <p>You are following:</p>
             <ul>
-                {% load static %}
+                {% for friend in friends %}
                 <li>
-                    <a href="{% url 'profile_others' %}" id="id_profile_link_ppkrit">Ashly Ash</a>
+                    <a href="{% url 'profile' friend.id %}" id="id_profile_link_{{friend.id}}">
+                        {{friend.first_name}} {{friend.last_name}}
+                    </a>
                 </li>
-                <li>
-                    <a href="{% url 'profile_others'%}" id="id_profile_link_billkin">Billkin Puttipong</a>
-                </li>
-                <li>
-                    <a href="{% url 'profile_others' %}" id="id_profile_link_aduso">Aduso Qu</a>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
-        {% endif%}
+    {% endif%}
     </div>
 
 

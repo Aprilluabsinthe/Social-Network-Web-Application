@@ -21,5 +21,6 @@ urlpatterns = [
     path('get-profile/<int:id>', views.get_profile, name='get-profile'),
     path('edit-profile/<int:id>', views.edit_profile, name='edit-profile'),
     path('personalinfo/<int:id>', views.get_bio, name='personalinfo'),
-
+    path('changefollow/<int:id>', views.changefollow, name='changefollow'),
+    path('get-friend/<int:id>', views.get_friend, name='get-friend'),
 ]
