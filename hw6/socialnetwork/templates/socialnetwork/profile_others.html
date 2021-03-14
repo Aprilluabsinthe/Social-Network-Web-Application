@@ -1,0 +1,36 @@
+{% extends "socialnetwork/basewithnav.html" %}
+{% block user-info %}
+<div>
+        <span id="id_logged_in_user_name">
+            {{user.first_name}} {{user.last_name}} <br>
+        </span>
+</div>
+{% endblock %}
+
+{% block page-name %}
+<h1><span id="id_page_name">Profile Page For Billkin Puttipong</span></h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post" action="profile_others">
+        <div class="mycontainer_light" style="width: 50rem;">
+            <div>
+                <span>User's Picture</span>
+            </div>
+            <figure align="center">
+                <img class="figure-img" id="id_user_picture"
+                     src="https://imgur.dcard.tw/Jp8u66Kh.jpg"
+                     alt="Card image cap">
+            </figure>
+            <div id="id_user_bio" style="border:0.1rem solid">
+                <p >If you want to know what a man's like, take a good look at how he treats his inferiors, not his equals.I've learned that people will forget what you said, people will forget what you did, but people will never forget how you made them feel.</p>
+            </div>
+            <div align="center">
+                <button id="id_unfollow" type="submit">Unfollow</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

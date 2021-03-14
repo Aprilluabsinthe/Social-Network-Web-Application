@@ -224,7 +224,7 @@ function updateWeather(request) {
     let response = JSON.parse(request.responseText)
     console.log(response)
     let p = response.properties.periods[2]
-    let forecast = "The forcast for  " +  p.name + "is " + p.temperature + " degrees"
+    let forecast = "The forcast for  " +  p.name + " is " + p.temperature + " degrees"
     console.log(forecast)
     document.getElementById("forecast").value = forecast
 }
