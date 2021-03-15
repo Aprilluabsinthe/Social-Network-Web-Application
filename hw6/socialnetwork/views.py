@@ -20,7 +20,7 @@ from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 # from socialnetwork.MyMemoryList import MyMemoryList
 from socialnetwork.models import Post, Comment, Profile, Friendship, AjaxItem
 import json
-import  datetime
+import datetime
 
 
 # ENTRY_LIST = MyMemoryList()
@@ -375,33 +375,41 @@ class DateTimeEncoder(JSONEncoder):
         if isinstance(obj, (datetime.date, datetime.datetime)):
             return obj.isoformat()
 
+
 def get_global_json_dumps_serializer(request):
     response_data = []
     for model_item in Post.objects.all():
         my_post = {
-            'usr': model_item.user.username,
+            'post_id': model_item.id,
+            'user': model_item.user.username,
+            'first_name': model_item.user.first_name,
+            'last_name': model_item.user.last_name,
             'content': model_item.content,
             'time': model_item.time,
         }
         response_data.append(my_post)
 
-    response_json = json.dumps(response_data,cls=DateTimeEncoder)
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
 
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
     return response
 
+
 def get_global_django_serializer(request):
     response_json = serializers.serialize('xml', Post.objects.all())
     return HttpResponse(response_json, content_type='application/xml')
 
+
 def get_global_xml(request):
     response_json = serializers.serialize('xml', Post.objects.all())
-    return HttpResponse(response_json,content_type='application/json')
+    return HttpResponse(response_json, content_type='application/json')
+
 
 def get_globalxml_template(request):
-    context = { 'posts': Post.objects.all() }
+    context = {'posts': Post.objects.all()}
     return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')
+
 
 def get_follower_xml_template(request):
     friends = Friendship.objects.filter(user_id=request.user.id)
@@ -414,8 +422,9 @@ def get_follower_xml_template(request):
     postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
     comments = Comment.objects.all().order_by('-time')
     context = {'posts': postitems,
-                   'comments': comments}
+               'comments': comments}
     return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')
+
 
 def _my_json_error_response(message, status=200):
     # You can create your JSON by constructing the string representation yourself (or just use json.dumps)
