@@ -11,6 +11,17 @@ function getGlobal() {
     request.send()
 }
 
+function getFollower() {
+    let request = new XMLHttpRequest()
+    request.onreadystatechange = function () {
+        if (request.readyState != 4) return
+        updatePage(request)
+    }
+
+    request.open("GET", "/socialnetwork/get-follower", true)
+    request.send()
+}
+
 function updatePage(request) {
     if (request.status != 200 && request.status != 404 ) {
         displayError("Received status code = " + request.status)
@@ -68,13 +79,13 @@ function updateGlobal(posts) {
             post.time +
             '</span></p></span>' +
             "        <div>" +
-            "            <div class=\"col dark-teal-text\">" +
+            '            <div class="col dark-teal-text">' +
             "                comment" +
             "            </div>" +
             "            <div>" +
             '                <input id = "id_comment_input_text_' + post.post_id + '" name="comment" class="form-control" type="text">' +
             "            </div>" +
-            "            <div align=\"right\">" +
+            '            <div align="right">' +
             '                <button id="id_comment_button_' + post.post_id+ '" onclick="addComment("' + post.post_id + '")" >Submit</button>' +
             "            </div>" +
             "        </div>" +

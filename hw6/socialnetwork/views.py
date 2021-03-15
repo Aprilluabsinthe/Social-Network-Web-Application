@@ -400,7 +400,7 @@ def get_global_json_dumps_serializer(request):
 
 
 def get_global_django_serializer(request):
-    response_json = serializers.serialize('xml', Post.objects.all())
+    response_json = serializers.serialize('xml', Post.objects.all().order_by('-time'))
     return HttpResponse(response_json, content_type='application/xml')
 
 
@@ -419,7 +419,7 @@ def get_globalxml_template(request):
     return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')
 
 
-def get_follower_xml_template(request):
+def get_follower_json_dumps_serializer(request):
     friends = Friendship.objects.filter(user_id=request.user.id)
     print(friends)
     seeonly = []
@@ -428,10 +428,23 @@ def get_follower_xml_template(request):
             seeonly.append(friend.friend)
     print(seeonly)
     postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
-    comments = Comment.objects.all().order_by('-time')
-    context = {'posts': postitems,
-               'comments': comments}
-    return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')
+
+    response_data = []
+    for model_item in postitems:
+        follower_post = {
+            'post_id': model_item.id,
+            'user': model_item.user.username,
+            'first_name': model_item.user.first_name,
+            'last_name': model_item.user.last_name,
+            'content': model_item.content,
+            'time': model_item.time,
+        }
+        response_data.append(follower_post)
+
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 def _my_json_error_response(message, status=200):
