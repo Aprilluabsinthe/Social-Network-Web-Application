@@ -1,4 +1,6 @@
+import json
 from datetime import datetime
+from json import JSONEncoder
 
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,11 +13,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
 # from socialnetwork.MyMemoryList import MyMemoryList
 from socialnetwork.models import Post, Comment, Profile, Friendship, AjaxItem
+import json
+import  datetime
 
 
 # ENTRY_LIST = MyMemoryList()
@@ -56,12 +61,15 @@ def globalstream_action(request):
 
 @login_required
 def makepost(request):
-    if not request.user:
-        return render(request, 'socialnetwork/globalstream.html', {})
+    if request.method != 'POST':
+        return _my_json_error_response("You must use a POST request for this operation", status=404)
+
+    if not 'post' in request.POST or not request.POST['post']:
+        return _my_json_error_response("You must enter an post to add.")
+
     context = {}
-    if 'post' not in request.POST or not request.POST['post']:
-        context['error'] = 'You must enter an content of a post'
-        return render(request, 'socialnetwork/globalstream.html', context)
+
+    print("enter making posts")
     if Post.objects.all():
         context = {'posts': Post.objects.all().order_by('-time')}
         print(context)
@@ -70,7 +78,7 @@ def makepost(request):
                     content=request.POST['post'])
     new_post.save()
     # return redirect('home')
-    return get_global_json(request)
+    return get_global_django_serializer(request)
 
 
 @login_required
@@ -361,9 +369,31 @@ def register_action(request):
     return redirect(reverse('home'))
 
 
-def get_global_json(request):
-    response_json = serializers.serialize('json', Post.objects.all())
-    return HttpResponse(response_json,content_type='application/json')
+class DateTimeEncoder(JSONEncoder):
+    # Override the default method
+    def default(self, obj):
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+            return obj.isoformat()
+
+def get_global_json_dumps_serializer(request):
+    response_data = []
+    for model_item in Post.objects.all():
+        my_post = {
+            'usr': model_item.user.username,
+            'content': model_item.content,
+            'time': model_item.time,
+        }
+        response_data.append(my_post)
+
+    response_json = json.dumps(response_data,cls=DateTimeEncoder)
+
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+def get_global_django_serializer(request):
+    response_json = serializers.serialize('xml', Post.objects.all())
+    return HttpResponse(response_json, content_type='application/xml')
 
 def get_global_xml(request):
     response_json = serializers.serialize('xml', Post.objects.all())
@@ -386,3 +416,8 @@ def get_follower_xml_template(request):
     context = {'posts': postitems,
                    'comments': comments}
     return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')
+
+def _my_json_error_response(message, status=200):
+    # You can create your JSON by constructing the string representation yourself (or just use json.dumps)
+    response_json = '{ "error": "' + message + '" }'
+    return HttpResponse(response_json, content_type='application/json', status=status)

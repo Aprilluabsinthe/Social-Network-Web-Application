@@ -23,7 +23,7 @@ urlpatterns = [
     path('personalinfo/<int:id>', views.get_bio, name='personalinfo'),
     path('changefollow/<int:id>', views.changefollow, name='changefollow'),
     path('get-friend/<int:id>', views.get_friend, name='get-friend'),
-    path('get-global', views.get_global_json),
+    path('get-global', views.get_global_json_dumps_serializer),
     path('get-follower', views.get_follower_xml_template),
     # path('add-comment', views.add_comment_ajax),
 ]

@@ -12,7 +12,7 @@ function getGlobal() {
 }
 
 function updatePage(request) {
-    if (request.status != 200) {
+    if (request.status != 200 && request.status != 404 ) {
         displayError("Received status code = " + request.status)
         return
     }
@@ -88,7 +88,7 @@ function deletePost(id) {
 
 function updateGlobal(posts) {
     // Removes the old to-do list items
-    let list = document.getElementById("posts")
+    let list = document.getElementById("postshow")
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild)
     }
