@@ -67,7 +67,7 @@ function updateGlobal(posts) {
         element.innerHTML =
             deleteButton + '<p class="lead">' +
             '<a href="profile/' + post.user+ '">' +
-            '<span class="message" id="id_post_profile_' + post.id + '">' +
+            '<span class="message" id="id_post_profile_' + post.post_id + '">' +
             post.first_name + " " + post.last_name +
             '</span></a></p>' +
             '<p align="center">' +
@@ -75,7 +75,7 @@ function updateGlobal(posts) {
             post.content +
             '</span></p>' +
             '<p align="right" class="small dark-teal-text h-50">' +
-            '<span id="id_post_date_time_' + post.id+ '">' +
+            '<span id="id_post_date_time_' + post.post_id+ '">' +
             post.time +
             '</span></p></span>' +
             "        <div>" +
@@ -86,7 +86,7 @@ function updateGlobal(posts) {
             '                <input id = "id_comment_input_text_' + post.post_id + '" name="comment" class="form-control" type="text">' +
             "            </div>" +
             '            <div align="right">' +
-            '                <button id="id_comment_button_' + post.post_id+ '" onclick="addComment("' + post.post_id + '")" >Submit</button>' +
+            '                <button id="id_comment_button_' + post.post_id+ '" onclick="addComment(' + post.post_id + ')" >Submit</button>' +
             "            </div>" +
             "        </div>" +
             "    <hr>"
@@ -185,6 +185,7 @@ function deletePost(id) {
     request.open("POST", "/socialnetwork/delete-post/" + id, true)
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
     request.send("csrfmiddlewaretoken=" + getCSRFToken())
+    location.reload()
 }
 
 function sanitize(s) {
