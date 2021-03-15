@@ -23,7 +23,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    # parentpost =  models.ForeignKey(Post, on_delete=models.PROTECT)
+    parentpost = models.ForeignKey(Post, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     content = models.CharField(max_length=200)
     time = models.DateTimeField(auto_now_add=True)

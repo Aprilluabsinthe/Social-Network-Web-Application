@@ -78,26 +78,30 @@ def makepost(request):
                     content=request.POST['post'])
     new_post.save()
     # return redirect('home')
-    return get_global_django_serializer(request)
+    return get_global_json_dumps_serializer(request)
 
 
 @login_required
-def makecomment(request):
-    if not request.user:
-        return render(request, 'socialnetwork/globalstream.html', {})
-    context = {'posts': Post.objects.all().order_by('-time')}
+def makecomment(request, id):
+    if not 'comment' in request.POST or not request.POST['comment']:
+        return _my_json_error_response("You must enter an post to add.")
 
     if 'comment' not in request.POST or not request.POST['comment']:
-        context['error'] = 'You must enter an content of a comment'
-        return render(request, 'socialnetwork/globalstream.html', context)
+        return _my_json_error_response("You must enter an post to add.")
+
+    # if 'parentid' not in request.POST or not request.POST['parentid']:
+    #     return _my_json_error_response("comment must belong to a post.")
 
     # thiscomments = Comment.objects.filter(parentpost = )
-    context = {'comments': Comment.objects.all().order_by('-time')}
-    new_comment = Comment(user=request.user,
+    new_comment = Comment(parentpost=Post.objects.get(id=id),
+                          user=request.user,
                           content=request.POST['comment'],
                           )
     new_comment.save()
-    return redirect('home')
+    print(new_comment)
+    print(Comment.objects.filter(parentpost_id=id))
+    # return redirect('home')
+    return get_global_json_dumps_serializer(request)
 
 
 @login_required
@@ -224,14 +228,14 @@ def get_profile(request, userid):
             context['profileform'] = ProfileForm()
         return render(request, 'socialnetwork/profile.html', context)
 
-    # except Http404:
-    #     if userid == request.user.id:
-    #         print("redirect to add my profile")
-    #         return redirect('add-profile')
-    #     else:
-    #         profileitem = Profile(user_id=userid)
-    #         context['profileform'] = ProfileForm()
-    #         return render(request, 'socialnetwork/profile.html', {})
+
+@login_required
+def get_profile_byname(request, username):
+    context = {}
+    profile_user = User.objects.get(username=username)
+    # profile_user = Profile.objects.filter(user=username)
+    # get_object_or_404(Profile, user=username)
+    return redirect('profile', userid=profile_user.id)
 
 
 @login_required
@@ -332,7 +336,6 @@ def login_action(request):
 
     new_user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password'])
-
     login(request, new_user)
     return redirect(reverse('home'))
 
@@ -398,6 +401,11 @@ def get_global_json_dumps_serializer(request):
 
 def get_global_django_serializer(request):
     response_json = serializers.serialize('xml', Post.objects.all())
+    return HttpResponse(response_json, content_type='application/xml')
+
+
+def get_comment_json_dumps_serializer(request, id):
+    response_json = serializers.serialize('xml', Comment.objects.filter(parentpost_id=id))
     return HttpResponse(response_json, content_type='application/xml')
 
 

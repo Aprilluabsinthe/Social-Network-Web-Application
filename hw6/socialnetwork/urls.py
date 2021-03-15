@@ -6,6 +6,7 @@ urlpatterns = [
     path('globalstream', views.home_action, name='globalstream'),
     path('followerstream', views.followerstream_action, name='followerstream'),
     path('profile/<int:userid>', views.get_profile, name='profile'),
+    path('profile/<username>', views.get_profile_byname, name='profile_byname'),
     path('profile_others', views.profile_others, name='profile_others'),
     path('login', views.login_action, name='login'),
     path('logout', views.logout_action, name='logout'),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('get-friend/<int:id>', views.get_friend, name='get-friend'),
     path('get-global', views.get_global_json_dumps_serializer),
     path('get-follower', views.get_follower_xml_template),
-    # path('add-comment', views.add_comment_ajax),
+    path('add-comment/<int:id>', views.makecomment),
+    path('get-comment/<int:id>', views.get_comment_json_dumps_serializer),
 ]

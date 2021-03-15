@@ -47,7 +47,7 @@ function updateGlobal(posts) {
         let deleteButton
         if (post.user === myUserName) {
             // action="{% url 'delete-post' post.id %}"
-            deleteButton = "<button onclick='deletePost(" + post.id + ")'>Delete</button> "
+            deleteButton = "<button onclick='deletePost(" + post.post_id + ")'>Delete</button> "
         } else {
             deleteButton = "<button style='visibility: hidden'>Delete</button> "
         }
@@ -55,46 +55,59 @@ function updateGlobal(posts) {
         let element = document.createElement("div")
         element.innerHTML =
             deleteButton + '<p class="lead">' +
-            '<a href="profile/{{post.user.id}}" + "post.user.id">' +
-            '<span class="message" id="id_post_profile_{{post.id}}">' +
-            post.first_name + post.last_name +
+            '<a href="profile/' + post.user+ '">' +
+            '<span class="message" id="id_post_profile_' + post.id + '">' +
+            post.first_name + " " + post.last_name +
             '</span></a></p>' +
             '<p align="center">' +
-            '<span class="lead" id="id_post_text_{{post.id}}">' +
+            '<span class="lead" id="id_post_text_' + post.post_id + '">' +
             post.content +
             '</span></p>' +
             '<p align="right" class="small dark-teal-text h-50">' +
-            '<span id="id_post_date_time_{{post.id}}">' +
+            '<span id="id_post_date_time_' + post.id+ '">' +
             post.time +
             '</span></p></span>' +
-            "    <form method=\"POST\" action=\"{% url 'makecomment' %}\">" +
             "        <div>" +
             "            <div class=\"col dark-teal-text\">" +
             "                comment" +
             "            </div>" +
             "            <div>" +
-            "                <input name=\"comment\" class=\"form-control\" id=\"id_comment_input_text_{{post.id}}\" type=\"text\">" +
+            '                <input id = "id_comment_input_text_' + post.post_id + '" name="comment" class="form-control" type="text">' +
             "            </div>" +
             "            <div align=\"right\">" +
-            "                <button id=\"id_comment_button_{{post.id}}\" onclick=\"addComment()\" >Submit</button>" +
+            '                <button id="id_comment_button_' + post.post_id+ '" onclick="addComment("' + post.post_id + '")" >Submit</button>' +
             "            </div>" +
             "        </div>" +
-            "    </form><hr>"
+            "    <hr>"
+        // Adds the todo-list item to the HTML list
+        list.appendChild(element)
+    }
+}
 
-            // '<p class="lead">' +
-            // '<a href="{% url \'profile\' post.user.id %}">' +
-            // '<span class="message" id="id_post_profile_{{post.id}}">' +
-            // post.user.username +
-            // '</span></a></p>' +
-            // '<p align="center">' +
-            // '<span class="lead" id="id_post_text_{{post.id}}">' +
-            // post.content +
-            // '</span></p>' +
-            // '<p align="right" class="small dark-teal-text h-50">' +
-            // '<span id="id_post_date_time_{{post.id}}">' +
-            // post.time +
-            // '</span></p></span>'
+function updateComment(){
 
+    // Removes the old to-do list items
+    let list = document.getElementById("commentshow")
+    while (list.hasChildNodes()) {
+        list.removeChild(list.firstChild)
+    }
+
+    // Adds each new post item to the list
+    for (let i = 0; i < posts.length; i++) {
+        let post = posts[i]
+
+        // Builds a new HTML list item for the post
+        let deleteButton
+        if (post.user === myUserName) {
+            // action="{% url 'delete-post' post.id %}"
+            deleteButton = "<button onclick='deletePost(" + post.post_id + ")'>Delete</button> "
+        } else {
+            deleteButton = "<button style='visibility: hidden'>Delete</button> "
+        }
+
+        let element = document.createElement("div")
+        element.innerHTML =
+            deleteButton
         // Adds the todo-list item to the HTML list
         list.appendChild(element)
     }
@@ -119,12 +132,13 @@ function addPost(){
     request.send("post="+postTextValue+"&csrfmiddlewaretoken="+getCSRFToken());
 }
 
-function addComment(){
-    let postTextElement = document.getElementById("id_post_input_text")
-    let postTextValue = postTextElement.value
+function addComment(postid){
+    let elementId = "id_comment_input_text_" + postid;
+    let commentTextElement = document.getElementById(elementId)
+    let commentTextValue = commentTextElement.value
 
     // Clear input box and old error message (if any)
-    postTextElement.value = "";
+    commentTextElement.value = "";
     displayError("");
 
     let request = new XMLHttpRequest()
@@ -133,9 +147,9 @@ function addComment(){
         updatePage(request)
     }
 
-    request.open("POST", "/socialnetwork/makecomment", true);
+    request.open("POST", "/socialnetwork/makecomment" + postid, true);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send("post="+postTextValue+"&csrfmiddlewaretoken="+getCSRFToken());
+    request.send("content="+postTextValue+"parentid="+postid+"&csrfmiddlewaretoken="+getCSRFToken());
 }
 
 function getCSRFToken() {
