@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE comments [
+    <!ELEMENT comments (comment*)>
+    <!ELEMENT comment (mainpost,id,text,user)>
+    <!ELEMENT mainpost (#PCDATA)>
+    <!ELEMENT id (#PCDATA)>
+    <!ELEMENT text (#PCDATA)>
+    <!ELEMENT user (#PCDATA)>
+]>
+
+<comments>
+    {% for comment in comments %}
+        <comment>
+            <mainpost>{{comment.mainpost}}</mainpost>
+            <id>{{comment.id}}</id>
+            <text>{{comment.text}}</text>
+            <user>{{ comment.user.username }}</user>
+        </comment>
+    {% endfor %}
+</comments>

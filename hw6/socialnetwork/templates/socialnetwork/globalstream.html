@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block content %}
+
 {% load static %}
 
 {% if error %}
@@ -22,60 +23,77 @@
 </div>
 {% endif %}
 
-<form id="post_input" method="post" action="{% url 'makepost' %}" style="width: 50%;">
-    <div>
-        <div class="col dark-teal-text">
-            New Post :
-        </div>
-        <div>
-            <input name="post" class="form-control" id="id_post_input_text" type="text" aria-label="Large"
-                   aria-describedby="inputGroup-sizing-sm">
-        </div>
-        {% csrf_token %}
-        <div align="right">
-            <button id="id_post_button" type="submit">Submit</button>
-        </div>
+<!--<form id="post_input" method="post" action="{% url 'makepost' %}" style="width: 50%;">-->
+<!--    <div>-->
+<!--        <div class="col dark-teal-text">-->
+<!--            New Post :-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <input name="post" class="form-control" id="id_post_input_text" type="text" aria-label="Large"-->
+<!--                   aria-describedby="inputGroup-sizing-sm">-->
+<!--        </div>-->
+<!--        {% csrf_token %}-->
+<!--        <div align="right">-->
+<!--            <button id="id_post_button" type="submit">Submit</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</form>-->
+
+<div>
+    <div class="col dark-teal-text">
+        New Post :
     </div>
-</form>
+    <div>
+        <input name="post" class="form-control" id="id_post_input_text" type="text" aria-label="Large"
+               aria-describedby="inputGroup-sizing-sm">
+    </div>
+    <div align="right">
+        <button id="id_post_button" onclick="addPost()">Submit</button>
+        <span id="error" class="error"></span>
+    </div>
+</div>
 
 <!--id="blog_1"-->
 {% for post in posts %}
 <div style="width: 70%;" class="mycontainer_light">
     <!--    delete post-->
-    <form class="delete-form"
-              action="{% url 'delete-post' post.id %}"
-              method="POST">
-            <button type="submit"
-                   {% if request.user != post.user %}
-                   style="visibility: hidden"
-                   {% endif %}
-            >Delete</button>
-            {% csrf_token %}
-     </form>
+<!--    <form class="delete-form"-->
+<!--              action="{% url 'delete-post' post.id %}"-->
+<!--              method="POST">-->
+<!--            <button type="submit"-->
+<!--                   {% if request.user != post.user %}-->
+<!--                   style="visibility: hidden"-->
+<!--                   {% endif %}-->
+<!--            >Delete</button>-->
+<!--            {% csrf_token %}-->
+<!--     </form>-->
 
 
     <!--The show part-->
-    <div class="row">
-        <!-- Post Content Column -->
-        <span class="col-lg">Published by
-            <p class="lead">
-                <a href="{% url 'profile' post.user.id %}">
-                    <span class="message"
-                          id="id_post_profile_{{post.id}}">
-                        {{post.user.first_name}} {{post.user.last_name}}
-                    </span>
-                </a>
-            </p>
-            <p align="center">
-                <span class="lead" id="id_post_text_{{post.id}}">
-                    {{post.content}}</span>
-            </p>
-            <p align="right" class="small dark-teal-text h-50">
-                <span id="id_post_date_time_{{post.id}}">
-                    {{post.time | date:'n/j/Y g:i A'}}
-                </span>
-            </p>
-        </span>
+<!--    <div class="row">-->
+<!--        &lt;!&ndash; Post Content Column &ndash;&gt;-->
+<!--        <span class="col-lg">Published by-->
+<!--            <p class="lead">-->
+<!--                <a href="{% url 'profile' post.user.id %}">-->
+<!--                    <span class="message"-->
+<!--                          id="id_post_profile_{{post.id}}">-->
+<!--                        {{post.user.first_name}} {{post.user.last_name}}-->
+<!--                    </span>-->
+<!--                </a>-->
+<!--            </p>-->
+<!--            <p align="center">-->
+<!--                <span class="lead" id="id_post_text_{{post.id}}">-->
+<!--                    {{post.content}}</span>-->
+<!--            </p>-->
+<!--            <p align="right" class="small dark-teal-text h-50">-->
+<!--                <span id="id_post_date_time_{{post.id}}">-->
+<!--                    {{post.time | date:'n/j/Y g:i A'}}-->
+<!--                </span>-->
+<!--            </p>-->
+<!--        </span>-->
+<!--    </div>-->
+
+    <div id="posts">
     </div>
 
     <form method="POST" action="{% url 'makecomment' %}">
@@ -125,8 +143,20 @@
         </div>
     </div>
     {% endfor %}
+
 </div>
 {% endfor %}
 
+<script>
+    // Save this user's username so our JS deleteItem() function can determine whether show delete buttons
+    var myUserName = "{{ request.user.username }}"
+
+    // Call getList() as soon as page is finished loading to display the to do list
+    window.onload = getGlobal;
+
+    // ... also call getList every 5 seconds hereafter to update the list
+    window.setInterval(getGlobal, 5000);
+</script>
 
 {% endblock %}
+

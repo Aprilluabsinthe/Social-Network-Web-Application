@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,7 +15,7 @@ from django.utils import timezone
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
 # from socialnetwork.MyMemoryList import MyMemoryList
-from socialnetwork.models import Post, Comment, Profile, Friendship
+from socialnetwork.models import Post, Comment, Profile, Friendship, AjaxItem
 
 
 # ENTRY_LIST = MyMemoryList()
@@ -61,13 +62,15 @@ def makepost(request):
     if 'post' not in request.POST or not request.POST['post']:
         context['error'] = 'You must enter an content of a post'
         return render(request, 'socialnetwork/globalstream.html', context)
+    if Post.objects.all():
+        context = {'posts': Post.objects.all().order_by('-time')}
+        print(context)
 
-    context = {'posts': Post.objects.all().order_by('-time')}
-    print(context)
     new_post = Post(user=request.user,
                     content=request.POST['post'])
     new_post.save()
-    return redirect('home')
+    # return redirect('home')
+    return get_global_json(request)
 
 
 @login_required
@@ -75,10 +78,12 @@ def makecomment(request):
     if not request.user:
         return render(request, 'socialnetwork/globalstream.html', {})
     context = {'posts': Post.objects.all().order_by('-time')}
+
     if 'comment' not in request.POST or not request.POST['comment']:
         context['error'] = 'You must enter an content of a comment'
         return render(request, 'socialnetwork/globalstream.html', context)
 
+    # thiscomments = Comment.objects.filter(parentpost = )
     context = {'comments': Comment.objects.all().order_by('-time')}
     new_comment = Comment(user=request.user,
                           content=request.POST['comment'],
@@ -354,3 +359,30 @@ def register_action(request):
                             password=form.cleaned_data['password'])
     login(request, new_user)
     return redirect(reverse('home'))
+
+
+def get_global_json(request):
+    response_json = serializers.serialize('json', Post.objects.all())
+    return HttpResponse(response_json,content_type='application/json')
+
+def get_global_xml(request):
+    response_json = serializers.serialize('xml', Post.objects.all())
+    return HttpResponse(response_json,content_type='application/json')
+
+def get_globalxml_template(request):
+    context = { 'posts': Post.objects.all() }
+    return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')
+
+def get_follower_xml_template(request):
+    friends = Friendship.objects.filter(user_id=request.user.id)
+    print(friends)
+    seeonly = []
+    if friends.exists():
+        for friend in friends:
+            seeonly.append(friend.friend)
+    print(seeonly)
+    postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
+    comments = Comment.objects.all().order_by('-time')
+    context = {'posts': postitems,
+                   'comments': comments}
+    return render(request, 'socialnetwork/posts.xml', context, content_type='application/xml')

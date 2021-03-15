@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-from socialnetwork.models import Profile, Post
+from socialnetwork.models import Profile, Post, Comment
 
 MAX_UPLOAD_SIZE = 2500000
 
@@ -35,6 +35,11 @@ class PostForm(forms.Form):
     class Meta:
         model = Post
         fields = ['user', 'content', 'time']
+
+class CommentForm(forms.Form):
+    class Meta:
+        model = Comment
+        fields = ['parentpost','user', 'content', 'time']
 
 
 class LoginForm(forms.Form):
