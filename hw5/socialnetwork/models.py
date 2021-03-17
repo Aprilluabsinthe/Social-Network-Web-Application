@@ -16,19 +16,19 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     content = models.CharField(max_length=200)
     time = models.DateTimeField(auto_now_add=True)
-    # commented_by = models.ForeignKey("Comment", blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return 'id=' + str(self.id) + ',user="' + self.user.username
 
 
 class Comment(models.Model):
+    parentpost = models.ForeignKey(Post, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     content = models.CharField(max_length=200)
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'id=' + str(self.id) + ',user="' + self.user.username + ',first_name="' + self.first_name + '"'
+        return 'parentpost=' + str(self.parentpost) + ',user="' + self.user.username + ',content="' + self.content + '"'
 
 
 class Friendship(models.Model):
@@ -37,3 +37,10 @@ class Friendship(models.Model):
 
     def __str__(self):
         return "{} follows {}".format(self.user.username, self.friend.username)
+
+class Commentship(models.Model):
+    mainpost = models.ForeignKey(Post, related_name='mainpost', on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, related_name='comment', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{} comments {}".format(self.comment, self.friend.mainpost)

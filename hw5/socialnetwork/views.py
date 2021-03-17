@@ -1,4 +1,6 @@
-from datetime import datetime
+import json
+import datetime
+from json import JSONEncoder
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404, HttpResponse
@@ -14,7 +16,7 @@ from django.utils import timezone
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
 # from socialnetwork.MyMemoryList import MyMemoryList
-from socialnetwork.models import Post, Comment, Profile, Friendship
+from socialnetwork.models import Post, Comment, Profile, Friendship, Commentship
 
 
 # ENTRY_LIST = MyMemoryList()
@@ -30,6 +32,26 @@ def home_action(request):
                        'comments': comments})
     except:
         return render(request, 'socialnetwork/globalstream.html', {})
+
+
+def refreshcommets(request):
+    try:
+        comments = []
+        postitems = Post.objects.all().order_by('-time')
+        for postitem in postitems:
+            commentships = Commentship.objects.filter(mainpost=postitem)
+
+            if commentship.exists():
+                for commentship in commentships:
+                    comments.append(commentship.comment)
+                    print(commentship)
+
+        return render(request, 'socialnetwork/globalstream.html',
+                      {'posts': postitems,
+                       'comments': comments})
+    except:
+        return render(request, 'socialnetwork/globalstream.html', {})
+
 
 
 @login_required
@@ -70,6 +92,34 @@ def makepost(request):
     return redirect('home')
 
 
+# @login_required
+# def makecomment(request, id):
+#     if not request.user:
+#         return render(request, 'socialnetwork/globalstream.html', {})
+#
+#     context = {}
+#     parentpost = Post.objects.get(id=id)
+#
+#     if 'comment' not in request.POST or not request.POST['comment']:
+#         context['error'] = 'You must enter an content of a comment'
+#         return render(request, 'socialnetwork/globalstream.html', context)
+#
+#     # context = {'comments': Comment.objects.all().order_by('-time')}
+#     new_comment = Comment(parentpost=Post.objects.get(id=id),
+#                           user=request.user,
+#                           content=request.POST['comment'],
+#                           )
+#
+#     print(new_comment)
+#     print(Comment.objects.filter(parentpost_id=id))
+#     new_comment.save()
+#
+#     commentship = Commentship.objects.create(mainpost=parentpost, comment=new_comment)
+#     print(commentship)
+#     print(Comment.objects.filter(parentpost_id=id))
+#     new_comment.save()
+#     return redirect('home')
+
 @login_required
 def makecomment(request):
     if not request.user:
@@ -84,6 +134,9 @@ def makecomment(request):
                           content=request.POST['comment'],
                           )
     new_comment.save()
+    return redirect('home')
+
+def addcomment(request, urlcontent):
     return redirect('home')
 
 
@@ -210,15 +263,6 @@ def get_profile(request, userid):
             context['profile'] = profileitem
             context['profileform'] = ProfileForm()
         return render(request, 'socialnetwork/profile.html', context)
-
-    # except Http404:
-    #     if userid == request.user.id:
-    #         print("redirect to add my profile")
-    #         return redirect('add-profile')
-    #     else:
-    #         profileitem = Profile(user_id=userid)
-    #         context['profileform'] = ProfileForm()
-    #         return render(request, 'socialnetwork/profile.html', {})
 
 
 @login_required
@@ -354,3 +398,55 @@ def register_action(request):
                             password=form.cleaned_data['password'])
     login(request, new_user)
     return redirect(reverse('home'))
+
+class DateTimeEncoder(JSONEncoder):
+    # Override the default method
+    def default(self, obj):
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+            return obj.isoformat()
+
+def get_global_json_dumps_serializer(request):
+    response_data = []
+    for model_item in Post.objects.all():
+        my_post = {
+            'post_id': model_item.id,
+            'user': model_item.user.username,
+            'first_name': model_item.user.first_name,
+            'last_name': model_item.user.last_name,
+            'content': model_item.content,
+            'time': model_item.time,
+        }
+        response_data.append(my_post)
+
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+def get_follower_json_dumps_serializer(request):
+    friends = Friendship.objects.filter(user_id=request.user.id)
+    print(friends)
+    seeonly = []
+    if friends.exists():
+        for friend in friends:
+            seeonly.append(friend.friend)
+    print(seeonly)
+    postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
+
+    response_data = []
+    for model_item in postitems:
+        follower_post = {
+            'post_id': model_item.id,
+            'user': model_item.user.username,
+            'first_name': model_item.user.first_name,
+            'last_name': model_item.user.last_name,
+            'content': model_item.content,
+            'time': model_item.time,
+        }
+        response_data.append(follower_post)
+
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response

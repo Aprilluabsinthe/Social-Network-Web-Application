@@ -29,7 +29,7 @@ class Comment(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'id=' + str(self.id) + ',user="' + self.user.username + ',first_name="' + self.first_name + '"'
+        return 'parentpost=' + str(self.parentpost) + ',user="' + self.user.username + ',content="' + self.content + '"'
 
 
 class Friendship(models.Model):
@@ -39,11 +39,9 @@ class Friendship(models.Model):
     def __str__(self):
         return "{} follows {}".format(self.user.username, self.friend.username)
 
-class AjaxItem(models.Model):
-    mainpost = models.OneToOneField(Post,max_length=200,on_delete=models.CASCADE)
-    text = models.CharField(max_length=200)
-    user = models.ForeignKey(User, default=None, on_delete=models.PROTECT)
-    time = models.DateTimeField(auto_now_add=True)
+class Commentship(models.Model):
+    mainpost = models.ForeignKey(Post, related_name='mainpost', on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, related_name='comment', on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'id=' + str(self.id) + ',user="' + self.user.username + ',content="' + self.text
+        return "{} comments {}".format(self.comment, self.mainpost)

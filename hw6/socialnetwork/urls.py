@@ -12,7 +12,7 @@ urlpatterns = [
     path('logout', views.logout_action, name='logout'),
     path('register', views.register_action, name='register'),
     path('makepost', views.makepost, name='makepost'),
-    path('makecomment', views.makecomment, name='makecomment'),
+    path('makecomment/<int:post_id>', views.makecomment, name='makecomment'),
     path('delete-post/<int:post_id>', views.delete_action_post, name='delete-post'),
     path('delete-comment/<int:id>', views.delete_action_comment, name='delete-comment'),
     path('add-profile', views.add_profile, name='add-profile'),
@@ -26,6 +26,6 @@ urlpatterns = [
     path('get-friend/<int:id>', views.get_friend, name='get-friend'),
     path('get-global', views.get_global_json_dumps_serializer),
     path('get-follower', views.get_follower_json_dumps_serializer),
-    path('add-comment/<int:id>', views.makecomment),
-    path('get-comment/<int:id>', views.get_comment_json_dumps_serializer),
+    path('get-comment', views.get_comment_json_dumps_serializer),
+    path('add-comment/<int:post_id>', views.addcomment),
 ]
