@@ -90,7 +90,7 @@ function updateGlobal(posts) {
                 deleteButton = "<button style='visibility:hidden'>delete</button>"
             }
 
-            $("#mainpost").append(
+            $("#mainpost").prepend(
                 '<div id="id_post_' + this.post_id + '"style="width: 70%;" class="mycontainer_light">' +
                 deleteButton +
                 '<div  class="row">' +
@@ -155,7 +155,7 @@ function updateComment(comments,post_id) {
             })
             if(!id_in_comments){
                 console.log("comment  "+ this.comment_id +"  remove\n")
-                this.remove
+                this.remove()
             }
         })
 
@@ -170,7 +170,7 @@ function updateComment(comments,post_id) {
                 deleteButton = "<button style='visibility:hidden'>delete</button>"
             }
 
-            $(commentareaId).append(
+            $(commentareaId).prepend(
                 '<div id="id_comment_' + this.comment_id + '"class="row">\n' +
                 '        <div class="col-2"></div>'+
                 '<div class="col-10" >'+
@@ -232,12 +232,6 @@ function addPost(){
 }
 
 function deletePost(id) {
-    let postTextElement = document.getElementById("id_post_input_text")
-    let postTextValue = postTextElement.value
-
-    // Clear input box and old error message (if any)
-    postTextElement.value = "";
-    displayError("");
 
     $.ajax({
         url: "/socialnetwork/delete-post/"+id,
@@ -274,12 +268,6 @@ function addcomment(post_id) {
 }
 
 function deleteComment(post_id,comment_id) {
-    let tag = "#id_comment_input_text_" + post_id
-    var comment_text = $(tag).val();
-
-    // Clear input box and old error message (if any)
-    $(tag).val('')
-    displayError('');
 
     $.ajax({
         url: "/socialnetwork/delete-comment/" + comment_id,

@@ -144,7 +144,7 @@ def delete_action_comment(request, comment_id):
 
         commentship = Commentship.objects.get(comment=comment_to_delete)
         mainpost = commentship.mainpost
-        print("mainpostid =" + mainpost.id)
+        print(f"mainpostid = {mainpost.id}")
         commentship.delete()
         print("delete post")
         comment_to_delete.delete()
