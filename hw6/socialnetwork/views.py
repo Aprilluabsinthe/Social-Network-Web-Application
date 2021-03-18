@@ -26,21 +26,6 @@ from collections import OrderedDict
 
 @login_required
 def home_action(request):
-    # try:
-    #     postitems = Post.objects.all().order_by('-time')
-    #     comments = []
-    #     print(postitems)
-    #
-    #     for postitem in postitems:
-    #         comment = Comment.objects.filter(comment__mainpost_id=postitem.id)
-    #         # if comment:
-    #         #     comments.append(comment.comment)
-    #         print(comment)
-    #
-    #     return render(request, 'socialnetwork/globalstream.html',
-    #                   {'posts': postitems,
-    #                    'comments': comments})
-    # except:
     return render(request, 'socialnetwork/globalstream.html', {})
 
 
@@ -428,7 +413,7 @@ def get_global_json_dumps_serializer(request):
         }
         response_data.append(my_post)
 
-    response_data.sort(key=lambda x: x["time"], reverse=True)
+    # response_data.sort(key=lambda x: x["time"], reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
@@ -457,7 +442,7 @@ def get_follower_json_dumps_serializer(request):
         }
         response_data.append(follower_post)
 
-    response_data.sort(key=lambda x: x["time"], reverse=True)
+    # response_data.sort(key=lambda x: x["time"], reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
@@ -485,7 +470,7 @@ def get_comment_json_dumps_serializer(request):
         }
         response_data.append(follower_post)
 
-    response_data.sort(key=lambda x: x["commenttime"], reverse=True)
+    # response_data.sort(key=lambda x: x["commenttime"], reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
@@ -515,7 +500,7 @@ def get_comment_byid_json_dumps_serializer(request, post_id):
         }
         response_data.append(follower_post)
 
-    response_data.sort(key=lambda x: x["commenttime"],reverse=True)
+    # response_data.sort(key=lambda x: x["commenttime"],reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
