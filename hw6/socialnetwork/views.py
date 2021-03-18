@@ -63,28 +63,6 @@ def makepost(request):
 
 
 @login_required
-def makecomment(request, post_id):
-    if not request.user:
-        return _my_json_error_response("You must be logged in to do this operation", status=403)
-
-    if 'comment' not in request.POST or not request.POST['comment']:
-        return _my_json_error_response("You must use a POST request for this operation", status=404)
-
-    mainpost = Post.objects.get(id=post_id)
-    # context = {'comments': Comment.objects.all().order_by('-time')}
-    new_comment = Comment(parentpost=mainpost,
-                          user=request.user,
-                          content=request.POST['comment'],
-                          )
-    new_comment.save()
-
-    commentship = Commentship.objects.create(mainpost=mainpost, comment=new_comment)
-    commentship.save()
-    print(Commentship)
-    return get_comment_byid_json_dumps_serializer(request, post_id)
-
-
-@login_required
 def delete_action_post(request, post_id):
     if not request.user.id:
         return _my_json_error_response("You must be logged in to do this operation", status=403)
@@ -442,7 +420,7 @@ def get_follower_json_dumps_serializer(request):
         }
         response_data.append(follower_post)
 
-    # response_data.sort(key=lambda x: x["time"], reverse=True)
+    response_data.sort(key=lambda x: x["time"], reverse=False)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
