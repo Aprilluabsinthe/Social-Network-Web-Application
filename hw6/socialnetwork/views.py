@@ -18,6 +18,7 @@ from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
 # from socialnetwork.MyMemoryList import MyMemoryList
 from socialnetwork.models import Post, Comment, Profile, Friendship, Commentship
+from collections import OrderedDict
 
 
 # ENTRY_LIST = MyMemoryList()
@@ -40,7 +41,7 @@ def home_action(request):
     #                   {'posts': postitems,
     #                    'comments': comments})
     # except:
-        return render(request, 'socialnetwork/globalstream.html', {})
+    return render(request, 'socialnetwork/globalstream.html', {})
 
 
 @login_required
@@ -95,12 +96,11 @@ def makecomment(request, post_id):
     commentship = Commentship.objects.create(mainpost=mainpost, comment=new_comment)
     commentship.save()
     print(Commentship)
-    return get_comment_byid_json_dumps_serializer(request,post_id)
+    return get_comment_byid_json_dumps_serializer(request, post_id)
 
 
 @login_required
 def delete_action_post(request, post_id):
-
     if not request.user.id:
         return _my_json_error_response("You must be logged in to do this operation", status=403)
 
@@ -128,7 +128,7 @@ def delete_action_post(request, post_id):
 
 
 @login_required
-def delete_action_comment(request, id):
+def delete_action_comment(request, comment_id):
     print("enter delete_action_comment")
     if not request.user.id:
         return _my_json_error_response("You must be logged in to do this operation", status=403)
@@ -138,18 +138,19 @@ def delete_action_comment(request, id):
 
     # Deletes the item if present in the database.
     try:
-        comment_to_delete = Comment.objects.get(id=id)
+        comment_to_delete = Comment.objects.get(id=comment_id)
         if request.user.username != comment_to_delete.user.username:
             return _my_json_error_response("You cannot delete other user's entries", status=403)
 
         commentship = Commentship.objects.get(comment=comment_to_delete)
         mainpost = commentship.mainpost
+        print("mainpostid =" + mainpost.id)
         commentship.delete()
         print("delete post")
         comment_to_delete.delete()
-        return get_comment_byid_json_dumps_serializer(request,mainpost.id)
+        return get_comment_byid_json_dumps_serializer(request, mainpost.id)
     except ObjectDoesNotExist:
-        return _my_json_error_response(f"Comment with id={id} does not exist.", status=404)
+        return _my_json_error_response(f"Comment with id={comment_id} does not exist.", status=404)
 
 
 def profile_others(request):
@@ -225,7 +226,6 @@ def addcomment(request, post_id):
     print(newcomment)
     print(commentship)
     return get_comment_json_dumps_serializer(request)
-
 
 
 @login_required
@@ -428,8 +428,8 @@ def get_global_json_dumps_serializer(request):
         }
         response_data.append(my_post)
 
+    response_data.sort(key=lambda x: x["time"], reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
-
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
     return response
@@ -457,6 +457,7 @@ def get_follower_json_dumps_serializer(request):
         }
         response_data.append(follower_post)
 
+    response_data.sort(key=lambda x: x["time"], reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
@@ -475,20 +476,23 @@ def get_comment_json_dumps_serializer(request):
             'mainuser': model_item.mainpost.user.username,
             'maincontent': model_item.mainpost.content,
             'maintime': model_item.mainpost.time,
-            'comment_id': model_item.comment,
             'comment_id': model_item.comment.id,
             'commentuser': model_item.comment.user.username,
+            'commentuser_firstname': model_item.comment.user.first_name,
+            'commentuser_lastname': model_item.comment.user.last_name,
             'commentcontent': model_item.comment.content,
             'commenttime': model_item.comment.time,
         }
         response_data.append(follower_post)
 
+    response_data.sort(key=lambda x: x["commenttime"], reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
     return response
 
-def get_comment_byid_json_dumps_serializer(request,post_id):
+
+def get_comment_byid_json_dumps_serializer(request, post_id):
     commentships = Commentship.objects.filter(mainpost=post_id)
     comments = []
     for commentship in commentships:
@@ -511,12 +515,23 @@ def get_comment_byid_json_dumps_serializer(request,post_id):
         }
         response_data.append(follower_post)
 
+    response_data.sort(key=lambda x: x["commenttime"],reverse=True)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
     return response
 
+
 def _my_json_error_response(message, status=200):
     # You can create your JSON by constructing the string representation yourself (or just use json.dumps)
     response_json = '{ "error": "' + message + '" }'
     return HttpResponse(response_json, content_type='application/json', status=status)
+
+
+def sort_by_time(list, keyname):
+    # Python dicts do not hold their ordering so we need to make it an
+    # ordered dict, after sorting.
+    return list.sorted(
+        key=lambda x: x[str(keyname)],
+        reverse=True
+    )

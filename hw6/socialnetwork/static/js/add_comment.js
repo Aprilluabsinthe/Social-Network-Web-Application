@@ -50,7 +50,6 @@ function updatePageComment(response,post_id) {
     }
 }
 
-
 function updateError(xhr, status, error) {
     displayError('Status=' + xhr.status + ' (' + error + ')')
 }
@@ -166,7 +165,7 @@ function updateComment(comments,post_id) {
         if(document.getElementById(my_id) == null){
             let deleteButton
             if(this.commentuser == myUserName){
-                deleteButton = "<button onclick='deleteComment(" + post_id +","+ this.comment_id + ")'>Delete</button>"
+                deleteButton = "<button onclick='deleteComment(" + post_id + ','+ this.comment_id + ")'>Delete</button>"
             }else{
                 deleteButton = "<button style='visibility:hidden'>delete</button>"
             }
@@ -233,6 +232,13 @@ function addPost(){
 }
 
 function deletePost(id) {
+    let postTextElement = document.getElementById("id_post_input_text")
+    let postTextValue = postTextElement.value
+
+    // Clear input box and old error message (if any)
+    postTextElement.value = "";
+    displayError("");
+
     $.ajax({
         url: "/socialnetwork/delete-post/"+id,
         type: "POST",
@@ -268,13 +274,20 @@ function addcomment(post_id) {
 }
 
 function deleteComment(post_id,comment_id) {
+    let tag = "#id_comment_input_text_" + post_id
+    var comment_text = $(tag).val();
+
+    // Clear input box and old error message (if any)
+    $(tag).val('')
+    displayError('');
+
     $.ajax({
-        url: "/socialnetwork/delete-comment/"+comment_id,
+        url: "/socialnetwork/delete-comment/" + comment_id,
         type: "POST",
         data: "csrfmiddlewaretoken="+getCSRFToken(),
         dataType : "json",
         success: function(response){
-            console.log("deletecomment "+comment_id +" in mainpost "+ post_id),
+            console.log("deletecomment "+ comment_id +" in mainpost "+ post_id)
             updatePageComment(response, post_id)
         },
         error: updateError
