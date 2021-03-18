@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 from socialnetwork.forms import ProfileForm, LoginForm, RegisterForm, PostForm
 
@@ -24,21 +25,21 @@ from socialnetwork.models import Post, Comment, Profile, Friendship, Commentship
 
 @login_required
 def home_action(request):
-    try:
-        postitems = Post.objects.all().order_by('-time')
-        comments = []
-        print(postitems)
-
-        for postitem in postitems:
-            comment = Comment.objects.filter(comment__mainpost_id=postitem.id)
-            # if comment:
-            #     comments.append(comment.comment)
-            print(comment)
-
-        return render(request, 'socialnetwork/globalstream.html',
-                      {'posts': postitems,
-                       'comments': comments})
-    except:
+    # try:
+    #     postitems = Post.objects.all().order_by('-time')
+    #     comments = []
+    #     print(postitems)
+    #
+    #     for postitem in postitems:
+    #         comment = Comment.objects.filter(comment__mainpost_id=postitem.id)
+    #         # if comment:
+    #         #     comments.append(comment.comment)
+    #         print(comment)
+    #
+    #     return render(request, 'socialnetwork/globalstream.html',
+    #                   {'posts': postitems,
+    #                    'comments': comments})
+    # except:
         return render(request, 'socialnetwork/globalstream.html', {})
 
 
@@ -52,10 +53,8 @@ def followerstream_action(request):
             seeonly.append(friend.friend)
     print(seeonly)
     postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
-    comments = Comment.objects.all().order_by('-time')
-    return render(request, 'socialnetwork/followerstream.html',
-                  {'posts': postitems,
-                   'comments': comments})
+    # comments = Comment.objects.all().order_by('-time')
+    return render(request, 'socialnetwork/followerstream.html', {})
 
 
 @login_required
@@ -66,28 +65,24 @@ def globalstream_action(request):
 @login_required
 def makepost(request):
     if not request.user:
-        return render(request, 'socialnetwork/globalstream.html', {})
-    context = {}
-    if 'post' not in request.POST or not request.POST['post']:
-        context['error'] = 'You must enter an content of a post'
-        return render(request, 'socialnetwork/globalstream.html', context)
+        return _my_json_error_response("You must be logged in to do this operation", status=403)
 
-    context = {'posts': Post.objects.all().order_by('-time')}
-    print(context)
+    if 'post' not in request.POST or not request.POST['post']:
+        return _my_json_error_response("You must use a POST request for this operation", status=404)
+
     new_post = Post(user=request.user,
                     content=request.POST['post'])
     new_post.save()
-    return redirect('home')
+    return get_global_json_dumps_serializer(request)
 
 
 @login_required
 def makecomment(request, post_id):
     if not request.user:
-        return render(request, 'socialnetwork/globalstream.html', {})
-    context = {}
+        return _my_json_error_response("You must be logged in to do this operation", status=403)
+
     if 'comment' not in request.POST or not request.POST['comment']:
-        context['error'] = 'You must enter an content of a comment'
-        return render(request, 'socialnetwork/globalstream.html', context)
+        return _my_json_error_response("You must use a POST request for this operation", status=404)
 
     mainpost = Post.objects.get(id=post_id)
     # context = {'comments': Comment.objects.all().order_by('-time')}
@@ -100,51 +95,61 @@ def makecomment(request, post_id):
     commentship = Commentship.objects.create(mainpost=mainpost, comment=new_comment)
     commentship.save()
     print(Commentship)
-    return redirect('home')
+    return get_comment_byid_json_dumps_serializer(request,post_id)
 
 
 @login_required
 def delete_action_post(request, post_id):
-    context = {'posts': Post.objects.all()}
+
+    if not request.user.id:
+        return _my_json_error_response("You must be logged in to do this operation", status=403)
 
     if request.method != 'POST':
-        context['error'] = 'Deletes must be done using the POST method'
-        return render(request, 'socialnetwork/globalstream.html', context)
+        return _my_json_error_response("You must use a POST request for this operation", status=404)
 
     # Deletes the item if present in the database.
     try:
         post_to_delete = Post.objects.get(id=post_id)
         if request.user.username != post_to_delete.user.username:
-            context['error'] = 'You can only delete Posts you have created.'
-            return redirect('home')
+            return _my_json_error_response("You cannot delete other user's entries", status=403)
 
+        commentship = Comment.objects.filter(parentpost=post_to_delete)
+        print(commentship)
+        for comment in commentship:
+            print("delete comment")
+            comment.delete()
+        print("delete commentship")
+        commentship.delete
+        print("delete post")
         post_to_delete.delete()
-        return redirect('home')
+        return get_global_json_dumps_serializer(request)
     except ObjectDoesNotExist:
-        context['error'] = 'The item did not exist in the To Do List.'
-        return redirect('home')
+        return _my_json_error_response(f"Post with id={post_id} does not exist.", status=404)
 
 
 @login_required
-def delete_action_comment(request, comment_id):
-    context = {'comments': Comment.objects.all()}
+def delete_action_comment(request, id):
+    print("enter delete_action_comment")
+    if not request.user.id:
+        return _my_json_error_response("You must be logged in to do this operation", status=403)
 
     if request.method != 'POST':
-        context['error'] = 'Deletes must be done using the POST method'
-        return render(request, 'socialnetwork/globalstream.html', context)
+        return _my_json_error_response("You must use a POST request for this operation", status=404)
 
     # Deletes the item if present in the database.
     try:
-        comment_to_delete = Comment.objects.get(id=comment_id)
+        comment_to_delete = Comment.objects.get(id=id)
         if request.user.username != comment_to_delete.user.username:
-            context['error'] = 'You can only delete comments you have created.'
-            return redirect('home')
+            return _my_json_error_response("You cannot delete other user's entries", status=403)
 
+        commentship = Commentship.objects.get(comment=comment_to_delete)
+        mainpost = commentship.mainpost
+        commentship.delete()
+        print("delete post")
         comment_to_delete.delete()
-        return redirect('home')
+        return get_comment_byid_json_dumps_serializer(request,mainpost.id)
     except ObjectDoesNotExist:
-        context['error'] = 'The item did not exist in the To Do List.'
-        return redirect('home')
+        return _my_json_error_response(f"Comment with id={id} does not exist.", status=404)
 
 
 def profile_others(request):
@@ -483,6 +488,33 @@ def get_comment_json_dumps_serializer(request):
     response['Access-Control-Allow-Origin'] = '*'
     return response
 
+def get_comment_byid_json_dumps_serializer(request,post_id):
+    commentships = Commentship.objects.filter(mainpost=post_id)
+    comments = []
+    for commentship in commentships:
+        comments.append(commentship.comment)
+    print(comments)
+
+    response_data = []
+    for model_item in comments:
+        follower_post = {
+            'parentpost_id': model_item.parentpost.id,
+            'parentpostuser': model_item.parentpost.user.username,
+            'parentpostcontent': model_item.parentpost.content,
+            'parentposttime': model_item.parentpost.time,
+            'comment_id': model_item.id,
+            'commentuser': model_item.user.username,
+            'commentuser_firstname': model_item.user.first_name,
+            'commentuser_lastname': model_item.user.last_name,
+            'commentcontent': model_item.content,
+            'commenttime': model_item.time,
+        }
+        response_data.append(follower_post)
+
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
 
 def _my_json_error_response(message, status=200):
     # You can create your JSON by constructing the string representation yourself (or just use json.dumps)

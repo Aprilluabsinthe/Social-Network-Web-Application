@@ -27,5 +27,6 @@ urlpatterns = [
     path('get-global', views.get_global_json_dumps_serializer),
     path('get-follower', views.get_follower_json_dumps_serializer),
     path('get-comment', views.get_comment_json_dumps_serializer),
+    path('get-comment/<int:post_id>', views.get_comment_byid_json_dumps_serializer),
     path('add-comment/<int:post_id>', views.addcomment),
 ]

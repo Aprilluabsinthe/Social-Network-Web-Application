@@ -1,7 +1,4 @@
 "use strict"
-function showPost(){
-
-}
 
 function getGlobal() {
     $.ajax({
@@ -21,11 +18,13 @@ function getFollower() {
     });
 }
 
-function getComment() {
+function getComment(post_id) {
     $.ajax({
-        url: "/socialnetwork/get-comment",
+        url: "/socialnetwork/get-comment/"+post_id,
         dataType : "json",
-        success: updatePage,
+        success: function (response) {
+            updatePageComment(response,post_id)
+        },
         error: updateError
     });
 }
@@ -41,13 +40,16 @@ function updatePage(response) {
 }
 
 
-function dictToURI(dict) {
-  var str = [];
-  for(var p in dict){
-     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(dict[p]));
-  }
-  return str.join("&");
+function updatePageComment(response,post_id) {
+    if (Array.isArray(response)) {
+        updateComment(response,post_id)
+    } else if (response.hasOwnProperty('error')) {
+        displayError(response.error)
+    } else {
+        displayError(response)
+    }
 }
+
 
 function updateError(xhr, status, error) {
     displayError('Status=' + xhr.status + ' (' + error + ')')
@@ -58,18 +60,24 @@ function displayError(message) {
 }
 
 
-
 function updateGlobal(posts) {
     // Removes the old to-do list items
-    $("div").each(
+    $(".mycontainer_light").each(
         function(){
+            console.log(this.id)
             let my_id = parseInt(this.id.substring("id_post_".length))
+            console.log(my_id)
             let id_in_posts = false
             $(posts).each(function(){
-                if (this.id == my_id)
+                if (this.post_id == my_id){
                     id_in_posts = true
+                console.log("post" + this.post_id +"exists")
+                }
             })
-            if(!id_in_posts) this.remove
+            if(!id_in_posts){
+                this.remove()
+                console.log("post" + this.post_id +"removes")
+            }
         })
 
     // Adds each new todolist item to the list (only if it's not already here)
@@ -78,15 +86,15 @@ function updateGlobal(posts) {
         if(document.getElementById(my_id) == null){
             let deleteButton
             if(this.user == myUserName){
-                deleteButton = "<button onclick='deletePost(" + this.id + ")'>Delete</button>"
+                deleteButton = "<button onclick='deletePost(" + this.post_id + ")'>Delete</button>"
             }else{
                 deleteButton = "<button style='visibility:hidden'>delete</button>"
             }
 
             $("#mainpost").append(
-                '<div style="width: 70%;" class="mycontainer_light">' +
+                '<div id="id_post_' + this.post_id + '"style="width: 70%;" class="mycontainer_light">' +
                 deleteButton +
-                '<div id="id_post_' + this.post_id + '" class="row">' +
+                '<div  class="row">' +
                 '        <span class="col-lg">Published by' +
                 '            <p class="lead">\n' +
                 '                <a href="profile/' + this.user + '">' +
@@ -98,11 +106,11 @@ function updateGlobal(posts) {
                 '            </p>' +
                 '            <p align="center">' +
                 '                <span class="lead" id="id_post_text_'+ this.post_id + '">' +
-                                    this.content + '</span>' +
+                                    sanitize(this.content) + '</span>' +
                 '            </p>' +
                 '            <p align="right" class="small dark-teal-text h-50">' +
                 '                <span id="id_post_date_time_'+ this.post_id +'">' +
-                                    this.time +
+                                   parseDateTime(this.time) +
                 '                </span>' +
                 '            </p>' +
                 '        </span>' +
@@ -118,16 +126,129 @@ function updateGlobal(posts) {
                 '                <button id="id_comment_button_'+ this.post_id + '" onclick = "addcomment(' + this.post_id + ')" >Submit</button>' +
                 '            </div>' +
                 '        </div>'+
+                '<div class="commentarea'+ this.post_id + '" id= "commentsforpost_'+ this.post_id + '"></div>'+
                 '   </div>'
+
+            )
+        }
+        getComment(this.post_id)
+    })
+}
+
+
+function updateComment(comments,post_id) {
+    let commentareaId = "#commentsforpost_" + post_id
+    let commentclass = ".commentarea" + post_id + " .row"
+    console.log(commentclass)
+    // Removes the old to-do list items
+    $(commentclass).each(
+        function(){
+            console.log("this comment id is "+this.id+"\n")
+            let my_id = parseInt(this.id.substring("id_comment_".length))
+            console.log("my id = "+my_id+"\n")
+            let id_in_comments = false
+            $(comments).each(function(){
+                console.log("comment each "+ this.comment_id +"\n")
+                if (this.comment_id == my_id){
+                    id_in_comments = true
+                    console.log("comment "+ this.comment_id +" exists\n")
+                }
+            })
+            if(!id_in_comments){
+                console.log("comment  "+ this.comment_id +"  remove\n")
+                this.remove
+            }
+        })
+
+    // Adds each new todolist item to the list (only if it's not already here)
+    $(comments).each(function(){
+        let my_id = "id_comment_" + this.comment_id
+        if(document.getElementById(my_id) == null){
+            let deleteButton
+            if(this.commentuser == myUserName){
+                deleteButton = "<button onclick='deleteComment(" + post_id +","+ this.comment_id + ")'>Delete</button>"
+            }else{
+                deleteButton = "<button style='visibility:hidden'>delete</button>"
+            }
+
+            $(commentareaId).append(
+                '<div id="id_comment_' + this.comment_id + '"class="row">\n' +
+                '        <div class="col-2"></div>'+
+                '<div class="col-10" >'+
+                deleteButton +
+                '            <div class="col-lg">Comment by' +
+                '                <a href="profile/' + this.commentuser + '">' +
+                '                <p class="lead">' +
+                '                    <span class="commenter" id="id_comment_profile_' + this.comment_id + '">' + this.commentuser_firstname + " " + this.commentuser_lastname + '</span>' +
+                '                    :' +
+                '                </p>' +
+                '               </a>'+
+                '                <p align="center">' +
+                '                    <span class="lead" id="id_comment_text_' + this.comment_id + '">' + sanitize(this.commentcontent) + '</span>' +
+                '                </p>' +
+                '                <p align="right" class="small dark-teal-text">\n' +
+                '                    <span id="id_comment_date_time_' + this.comment_id + '">' + parseDateTime(this.commenttime) + '</span>' +
+                '                </p>' +
+                '            </div></div></div></div>'
             )
         }
     })
 }
 
+function addPost() {
+    let itemTextElement = $("#id_post_input_text")
+    let itemTextValue   = itemTextElement.val()
+    alert(itemTextValue)
+
+    // Clear input box and old error message (if any)
+    itemTextElement.val('')
+    displayError('');
+
+    $.ajax({
+        url: "/socialnetwork/makepost",
+        type: "POST",
+        data: "post="+itemTextValue+"&csrfmiddlewaretoken="+getCSRFToken(),
+        dataType : "json",
+        success: updatePage,
+        error: updateError
+    });
+}
+
+function addPost(){
+    let postTextElement = document.getElementById("id_post_input_text")
+    let postTextValue = postTextElement.value
+
+    // Clear input box and old error message (if any)
+    postTextElement.value = "";
+    displayError("");
+
+    $.ajax({
+        url: "/socialnetwork/makepost" ,
+        type: "POST",
+        data: "post=" + postTextValue +"&csrfmiddlewaretoken="+getCSRFToken(),
+        dataType : "json",
+        success: updatePage,
+        error: updateError
+    });
+}
+
+function deletePost(id) {
+    $.ajax({
+        url: "/socialnetwork/delete-post/"+id,
+        type: "POST",
+        data: "csrfmiddlewaretoken="+getCSRFToken(),
+        dataType : "json",
+        success: function(response){
+            console.log("deletePost"+id),
+            updatePage(response)
+        },
+        error: updateError
+    });
+}
+
 
 function addcomment(post_id) {
     let tag = "#id_comment_input_text_" + post_id
-
     var comment_text = $(tag).val();
 
     // Clear input box and old error message (if any)
@@ -139,93 +260,25 @@ function addcomment(post_id) {
         type: "POST",
         data: "post_id=" + post_id + "&comment_text=" + comment_text+"&csrfmiddlewaretoken="+getCSRFToken(),
         dataType : "json",
-        success: updatePage,
+        success: function (response) {
+            updatePageComment(response,post_id)
+        },
         error: updateError
     });
 }
 
-function updateComment(){
-
-    // Removes the old to-do list items
-    let list = document.getElementById("commentshow")
-    while (list.hasChildNodes()) {
-        list.removeChild(list.firstChild)
-    }
-
-    // Adds each new post item to the list
-    for (let i = 0; i < posts.length; i++) {
-        let post = posts[i]
-
-        // Builds a new HTML list item for the post
-        let deleteButton
-        if (post.user === myUserName) {
-            // action="{% url 'delete-post' post.id %}"
-            deleteButton = "<button onclick='deletePost(" + post.post_id + ")'>Delete</button> "
-        } else {
-            deleteButton = "<button style='visibility: hidden'>Delete</button> "
-        }
-
-        let element = document.createElement("div")
-        element.innerHTML =
-            deleteButton
-        // Adds the todo-list item to the HTML list
-        list.appendChild(element)
-    }
-}
-
-function addPost(){
-    let postTextElement = document.getElementById("id_post_input_text")
-    let postTextValue = postTextElement.value
-
-    // Clear input box and old error message (if any)
-    postTextElement.value = "";
-    displayError("");
-
-    let request = new XMLHttpRequest()
-    request.onreadystatechange = function() {
-        if (request.readyState != 4) return
-        updatePage(request)
-    }
-
-    request.open("POST", "/socialnetwork/makepost", true);
-    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send("post="+postTextValue+"&csrfmiddlewaretoken="+getCSRFToken());
-}
-
-function addComment(content_text,postid){
-    let elementId = "id_comment_input_text_" + postid;
-    let commentTextElement = document.getElementById(elementId)
-    let commentTextValue = commentTextElement.value
-
-    // Clear input box and old error message (if any)
-    commentTextElement.value = "";
-    displayError("");
-
-    let request = new XMLHttpRequest()
-    request.onreadystatechange = function() {
-        if (request.readyState != 4) return
-        updatePage(request)
-    }
-    let urlcontent = {"content_text" : content_text, "post_id" : postid}
-
-    request.open("POST", "/socialnetwork/add-comment/" + dictToURI(urlcontent), true);
-    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send("content="+postTextValue+"parentid="+postid+"&csrfmiddlewaretoken="+getCSRFToken());
-}
-
-
-// action="{% url 'delete-post' post.id %}"
-function deletePost(id) {
-    let request = new XMLHttpRequest()
-    request.onreadystatechange = function () {
-        if (request.readyState != 4) return
-        updatePage(request)
-    }
-
-    request.open("POST", "/socialnetwork/delete-post/" + id, true)
-    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    request.send("csrfmiddlewaretoken=" + getCSRFToken())
-    location.reload()
+function deleteComment(post_id,comment_id) {
+    $.ajax({
+        url: "/socialnetwork/delete-comment/"+comment_id,
+        type: "POST",
+        data: "csrfmiddlewaretoken="+getCSRFToken(),
+        dataType : "json",
+        success: function(response){
+            console.log("deletecomment "+comment_id +" in mainpost "+ post_id),
+            updatePageComment(response, post_id)
+        },
+        error: updateError
+    });
 }
 
 function sanitize(s) {
@@ -234,6 +287,7 @@ function sanitize(s) {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
+            .replace(/&#63/g, '&quest;')
 }
 
 
@@ -246,5 +300,15 @@ function getCSRFToken() {
         }
     }
     return "unknown"
+}
+
+function parseDateTime(isotime){
+    let datetime = new Date(isotime.toString())
+    console.log(datetime)
+    var amOrPm = (datetime.getHours() < 12) ? "AM" : "PM";
+    var hour = (datetime.getHours() < 12) ? datetime.getHours() : datetime.getHours() - 12;
+    let datetimestring = datetime.getMonth()+1 + '/' + datetime.getDate() + '/' + datetime.getFullYear() + ' ' + hour + ':' + datetime.getMinutes() + ' ' + amOrPm;
+    console.log(datetimestring)
+    return datetimestring
 }
 
