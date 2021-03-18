@@ -167,7 +167,7 @@ def addcomment(request):
     if not 'comment_text' in request.POST or not request.POST['comment_text']:
         return _my_json_error_response("You must enter an comment_text to add.", status=200)
 
-    if not 'post_id' in request.POST or not request.POST['post_id'] or request.POST['post_id']:
+    if not 'post_id' in request.POST or not request.POST['post_id']:
         return _my_json_error_response("No post_id to add.", status=200)
 
     postid = request.POST["post_id"]

@@ -16,6 +16,7 @@ function getFollower() {
         url: "/socialnetwork/get-follower",
         dataType : "json",
         success: function (response) {
+            console.log(response)
             updatePage(response,1)// Follower
         },
         error: updateError
@@ -27,6 +28,7 @@ function getComment(post_id,page) {
         url: "/socialnetwork/get-comment/"+post_id,
         dataType : "json",
         success: function (response) {
+            console.log(response)
             updatePageComment(response,post_id,page)// global
         },
         error: updateError
