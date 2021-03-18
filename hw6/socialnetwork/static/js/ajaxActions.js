@@ -4,7 +4,9 @@ function getGlobal() {
     $.ajax({
         url: "/socialnetwork/get-global",
         dataType : "json",
-        success: updatePage,
+        success:  function (response) {
+            updatePage(response,0)// global
+        },
         error: updateError
     });
 }
@@ -13,25 +15,27 @@ function getFollower() {
     $.ajax({
         url: "/socialnetwork/get-follower",
         dataType : "json",
-        success: updatePage,
-        error: updateError
-    });
-}
-
-function getComment(post_id) {
-    $.ajax({
-        url: "/socialnetwork/get-comment/"+post_id,
-        dataType : "json",
         success: function (response) {
-            updatePageComment(response,post_id)
+            updatePage(response,1)// Follower
         },
         error: updateError
     });
 }
 
-function updatePage(response) {
+function getComment(post_id,page) {
+    $.ajax({
+        url: "/socialnetwork/get-comment/"+post_id,
+        dataType : "json",
+        success: function (response) {
+            updatePageComment(response,post_id,page)// global
+        },
+        error: updateError
+    });
+}
+
+function updatePage(response,page) {
     if (Array.isArray(response)) {
-        updateGlobal(response)
+        updateGlobal(response,page)
     } else if (response.hasOwnProperty('error')) {
         displayError(response.error)
     } else {
@@ -40,9 +44,9 @@ function updatePage(response) {
 }
 
 
-function updatePageComment(response,post_id) {
+function updatePageComment(response,post_id,page) {
     if (Array.isArray(response)) {
-        updateComment(response,post_id)
+        updateComment(response,post_id,page)
     } else if (response.hasOwnProperty('error')) {
         displayError(response.error)
     } else {
@@ -59,7 +63,7 @@ function displayError(message) {
 }
 
 
-function updateGlobal(posts) {
+function updateGlobal(posts,page) {
     // Removes the old to-do list items
     $(".mycontainer_light").each(
         function(){
@@ -85,9 +89,16 @@ function updateGlobal(posts) {
         if(document.getElementById(my_id) == null){
             let deleteButton
             if(this.user == myUserName){
-                deleteButton = "<button onclick='deletePost(" + this.post_id + ")'>Delete</button>"
+                deleteButton = "<button onclick='deletePost(" + this.post_id + ',' + page  +")'>Delete</button>"
             }else{
                 deleteButton = "<button style='visibility:hidden'>delete</button>"
+            }
+
+            let commentarea
+            if(page == 0){
+                commentarea = '<div class="commentarea'+ this.post_id + '" id= "commentsforpost_'+ this.post_id + '"></div>'
+            }else{
+                commentarea = '<div class="commentarea_follower_'+ this.post_id + '" id= "commentsforpost_follower_'+ this.post_id + '"></div>'
             }
 
             $("#mainpost").prepend(
@@ -122,22 +133,31 @@ function updateGlobal(posts) {
                 '                <input name="comment" class="form-control comment" id="id_comment_input_text_' + this.post_id + '" type="text">' +
                 '            </div>' +
                 '            <div align="right">' +
-                '                <button id="id_comment_button_'+ this.post_id + '" onclick = "addcomment(' + this.post_id + ')" >Submit</button>' +
+                '                <button id="id_comment_button_'+ this.post_id + '" onclick = "addcomment(' + this.post_id + ',' + page + ')" >Submit</button>' +
                 '            </div>' +
                 '        </div>'+
-                '<div class="commentarea'+ this.post_id + '" id= "commentsforpost_'+ this.post_id + '"></div>'+
+                commentarea +
                 '   </div>'
-
             )
         }
-        getComment(this.post_id)
+        getComment(this.post_id,page)
     })
 }
 
 
-function updateComment(comments,post_id) {
-    let commentareaId = "#commentsforpost_" + post_id
-    let commentclass = ".commentarea" + post_id + " .row"
+function updateComment(comments,post_id,page) {
+    let commentareaId
+    let commentclass
+
+    if(page==0){
+        commentareaId = "#commentsforpost_" + post_id
+        commentclass = ".commentarea" + post_id + " .row "
+    }else{
+        commentareaId = "#commentsforpost_follower_" + post_id
+        commentclass = ".commentarea_follower_" + post_id + " .row "
+    }
+
+    // let commentclass = ".commentarea" + post_id + " " + commentareaId  + " .row "
     console.log(commentclass)
     // Removes the old to-do list items
     $(commentclass).each(
@@ -154,7 +174,7 @@ function updateComment(comments,post_id) {
                 }
             })
             if(!id_in_comments){
-                console.log("comment  "+ this.comment_id +"  remove\n")
+                console.log("comment  "+ this.id +"  remove\n")
                 this.remove()
             }
         })
@@ -162,16 +182,18 @@ function updateComment(comments,post_id) {
     // Adds each new todolist item to the list (only if it's not already here)
     $(comments).each(function(){
         let my_id = "id_comment_" + this.comment_id
+        console.log("my_id = "+ my_id)
         if(document.getElementById(my_id) == null){
             let deleteButton
             if(this.commentuser == myUserName){
-                deleteButton = "<button onclick='deleteComment(" + post_id + ','+ this.comment_id + ")'>Delete</button>"
+                deleteButton = "<button onclick='deleteComment(" + post_id + "," + this.comment_id + "," + page + ")'>Delete</button>"
             }else{
                 deleteButton = "<button style='visibility:hidden'>delete</button>"
             }
+            console.log("commentareaId---->"+ commentareaId)
 
             $(commentareaId).prepend(
-                '<div id="id_comment_' + this.comment_id + '"class="row">\n' +
+                '<div id="id_comment_' + this.comment_id + '"class="row">' +
                 '        <div class="col-2"></div>'+
                 '<div class="col-10" >'+
                 deleteButton +
@@ -194,24 +216,26 @@ function updateComment(comments,post_id) {
     })
 }
 
-function addPost() {
-    let itemTextElement = $("#id_post_input_text")
-    let itemTextValue   = itemTextElement.val()
-    alert(itemTextValue)
-
-    // Clear input box and old error message (if any)
-    itemTextElement.val('')
-    displayError('');
-
-    $.ajax({
-        url: "/socialnetwork/makepost",
-        type: "POST",
-        data: "post="+itemTextValue+"&csrfmiddlewaretoken="+getCSRFToken(),
-        dataType : "json",
-        success: updatePage,
-        error: updateError
-    });
-}
+// function addPost() {
+//     let itemTextElement = $("#id_post_input_text")
+//     let itemTextValue   = itemTextElement.val()
+//     alert(itemTextValue)
+//
+//     // Clear input box and old error message (if any)
+//     itemTextElement.val('')
+//     displayError('');
+//
+//     $.ajax({
+//         url: "/socialnetwork/makepost",
+//         type: "POST",
+//         data: "post="+itemTextValue+"&csrfmiddlewaretoken="+getCSRFToken(),
+//         dataType : "json",
+//         success: function (response) {
+//             updatePage(response,page)
+//         },
+//         error: updateError
+//     });
+// }
 
 function addPost(){
     let postTextElement = document.getElementById("id_post_input_text")
@@ -226,12 +250,14 @@ function addPost(){
         type: "POST",
         data: "post=" + postTextValue +"&csrfmiddlewaretoken="+getCSRFToken(),
         dataType : "json",
-        success: updatePage,
+        success: function (response) {
+            updatePage(response,0)
+        },
         error: updateError
     });
 }
 
-function deletePost(id) {
+function deletePost(id,page) {
 
     $.ajax({
         url: "/socialnetwork/delete-post/"+id,
@@ -240,34 +266,34 @@ function deletePost(id) {
         dataType : "json",
         success: function(response){
             console.log("deletePost"+id),
-            updatePage(response)
+            updatePage(response,0)
         },
         error: updateError
     });
 }
 
-
-function addcomment(post_id) {
+function addcomment(post_id,page) {
     let tag = "#id_comment_input_text_" + post_id
     var comment_text = $(tag).val();
+    console.log("comment input visiting is:    "+tag)
 
     // Clear input box and old error message (if any)
     $(tag).val('')
     displayError('');
 
     $.ajax({
-        url: "/socialnetwork/add-comment/" + post_id,
+        url: "/socialnetwork/add-comment",
         type: "POST",
         data: "post_id=" + post_id + "&comment_text=" + comment_text+"&csrfmiddlewaretoken="+getCSRFToken(),
         dataType : "json",
         success: function (response) {
-            updatePageComment(response,post_id)
+            updatePageComment(response,post_id,page)
         },
         error: updateError
     });
 }
 
-function deleteComment(post_id,comment_id) {
+function deleteComment(post_id,comment_id,page) {
 
     $.ajax({
         url: "/socialnetwork/delete-comment/" + comment_id,
@@ -276,7 +302,7 @@ function deleteComment(post_id,comment_id) {
         dataType : "json",
         success: function(response){
             console.log("deletecomment "+ comment_id +" in mainpost "+ post_id)
-            updatePageComment(response, post_id)
+            updatePageComment(response, post_id,page)
         },
         error: updateError
     });
@@ -291,7 +317,6 @@ function sanitize(s) {
             .replace(/&#63/g, '&quest;')
 }
 
-
 function getCSRFToken() {
     let cookies = document.cookie.split(";")
     for (let i = 0; i < cookies.length; i++) {
@@ -305,11 +330,9 @@ function getCSRFToken() {
 
 function parseDateTime(isotime){
     let datetime = new Date(isotime.toString())
-    console.log(datetime)
     var amOrPm = (datetime.getHours() < 12) ? "AM" : "PM";
     var hour = (datetime.getHours() < 12) ? datetime.getHours() : datetime.getHours() - 12;
     let datetimestring = datetime.getMonth()+1 + '/' + datetime.getDate() + '/' + datetime.getFullYear() + ' ' + hour + ':' + datetime.getMinutes() + ' ' + amOrPm;
-    console.log(datetimestring)
     return datetimestring
 }
 

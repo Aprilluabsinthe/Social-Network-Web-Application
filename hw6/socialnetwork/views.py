@@ -38,8 +38,6 @@ def followerstream_action(request):
         for friend in friends:
             seeonly.append(friend.friend)
     print(seeonly)
-    postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
-    # comments = Comment.objects.all().order_by('-time')
     return render(request, 'socialnetwork/followerstream.html', {})
 
 
@@ -161,7 +159,7 @@ def add_profile(request):
     return redirect('profile', userid=request.user.id)
 
 
-def addcomment(request, post_id):
+def addcomment(request):
     print("enter addcomment")
     if request.method != 'POST':
         print("err1")
@@ -171,21 +169,23 @@ def addcomment(request, post_id):
         print("err2")
         return _my_json_error_response("You must enter an comment_text to add.")
 
+    postid = request.POST["post_id"]
     content = request.POST["comment_text"]
-    mainpost = Post.objects.get(id=post_id)
+    mainpost = Post.objects.get(id=postid)
+    print(f"mainpost for {content} is {mainpost.content}")
     newcomment = Comment.objects.create(
         parentpost=mainpost,
         user=request.user,
         content=content,
     )
     newcomment.save()
-    print("save newcomment")
+    print(f"save newcomment{content}")
     commentship = Commentship.objects.create(
         mainpost=mainpost,
         comment=newcomment
     )
     commentship.save()
-    print("save commentship")
+    print(f"save commentship{newcomment.content}-->{mainpost.content}")
     print(newcomment)
     print(commentship)
     return get_comment_json_dumps_serializer(request)
@@ -229,10 +229,7 @@ def get_profile(request, userid):
 
 @login_required
 def get_profile_byname(request, username):
-    context = {}
     profile_user = User.objects.get(username=username)
-    # profile_user = Profile.objects.filter(user=username)
-    # get_object_or_404(Profile, user=username)
     return redirect('profile', userid=profile_user.id)
 
 
@@ -391,7 +388,7 @@ def get_global_json_dumps_serializer(request):
         }
         response_data.append(my_post)
 
-    # response_data.sort(key=lambda x: x["time"], reverse=True)
+    response_data.sort(key=lambda x: x["time"], reverse=False)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
@@ -406,7 +403,7 @@ def get_follower_json_dumps_serializer(request):
         for friend in friends:
             seeonly.append(friend.friend)
     print(seeonly)
-    postitems = Post.objects.filter(user__in=seeonly).order_by('-time')
+    postitems = Post.objects.filter(user__in=seeonly)
 
     response_data = []
     for model_item in postitems:
@@ -448,7 +445,7 @@ def get_comment_json_dumps_serializer(request):
         }
         response_data.append(follower_post)
 
-    # response_data.sort(key=lambda x: x["commenttime"], reverse=True)
+    response_data.sort(key=lambda x: x["commenttime"], reverse=False)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
@@ -456,7 +453,9 @@ def get_comment_json_dumps_serializer(request):
 
 
 def get_comment_byid_json_dumps_serializer(request, post_id):
-    commentships = Commentship.objects.filter(mainpost=post_id)
+    print(f"post_id ==== {post_id}")
+    commentships = Commentship.objects.filter(mainpost_id=post_id)
+    print(f"get_comment_byid_json_dumps_serializer--->{commentships}")
     comments = []
     for commentship in commentships:
         comments.append(commentship.comment)
@@ -478,7 +477,7 @@ def get_comment_byid_json_dumps_serializer(request, post_id):
         }
         response_data.append(follower_post)
 
-    # response_data.sort(key=lambda x: x["commenttime"],reverse=True)
+    response_data.sort(key=lambda x: x["commenttime"], reverse=False)
     response_json = json.dumps(response_data, cls=DateTimeEncoder)
     response = HttpResponse(response_json, content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'

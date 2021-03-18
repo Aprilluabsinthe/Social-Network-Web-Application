@@ -29,7 +29,7 @@ class Comment(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'parentpost=' + str(self.parentpost) + ',user="' + self.user.username + ',content="' + self.content + '"'
+        return 'parentpost=' + str(self.parentpost) + ',user=' + self.user.username + ',content="' + self.content + '"'
 
 
 class Friendship(models.Model):
@@ -44,4 +44,4 @@ class Commentship(models.Model):
     comment = models.ForeignKey(Comment, related_name='comment', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} comments {}".format(self.comment, self.mainpost)
+        return "{}-'{}' comments {}-'{}'".format(self.comment.user.username,self.comment.content, self.mainpost.user.username,self.mainpost.content)
