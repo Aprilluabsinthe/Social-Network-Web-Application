@@ -162,16 +162,23 @@ def add_profile(request):
 def addcomment(request):
     print("enter addcomment")
     if request.method != 'POST':
-        print("err1")
         return _my_json_error_response("You must use a POST request for this operation", status=404)
 
     if not 'comment_text' in request.POST or not request.POST['comment_text']:
-        print("err2")
-        return _my_json_error_response("You must enter an comment_text to add.")
+        return _my_json_error_response("You must enter an comment_text to add.", status=200)
+
+    if not 'post_id' in request.POST or not request.POST['post_id'] or request.POST['post_id']:
+        return _my_json_error_response("No post_id to add.", status=200)
 
     postid = request.POST["post_id"]
     content = request.POST["comment_text"]
-    mainpost = Post.objects.get(id=postid)
+
+    try:
+        mainpost = get_object_or_404(Post, id=postid)
+    except Http404:
+        return _my_json_error_response("post_id invalid or Posts not found.", status=200)
+
+
     print(f"mainpost for {content} is {mainpost.content}")
     newcomment = Comment.objects.create(
         parentpost=mainpost,
