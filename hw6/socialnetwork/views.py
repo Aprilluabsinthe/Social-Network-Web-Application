@@ -195,7 +195,7 @@ def addcomment(request):
     print(f"save commentship{newcomment.content}-->{mainpost.content}")
     print(newcomment)
     print(commentship)
-    return get_comment_json_dumps_serializer(request)
+    return get_comment_byid_json_dumps_serializer(request,postid)
 
 
 @login_required
