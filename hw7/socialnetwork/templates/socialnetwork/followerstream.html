@@ -1,0 +1,43 @@
+{% extends "socialnetwork/basewithnav.html" %}
+
+{% block user-info %}
+<div>
+    <span id="id_logged_in_user_name">
+        {{user.first_name}} {{user.last_name}} <br>
+    </span>
+</div>
+{% endblock %}
+
+
+{% block page-name %}
+<h1><span id="id_page_name">Follower Stream</span></h1>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+{% if error %}
+<div class="error">
+    {{error}}
+</div>
+{% endif %}
+
+
+<span id="error" class="error"></span>
+<div id="mainpost"></div>
+
+
+<script>
+    // Save this user's username so our JS deleteItem() function can determine whether show delete buttons
+    var myUserName = "{{ request.user.username }}"
+
+    // Call getList() as soon as page is finished loading to display the to do list
+    window.onload = getFollower;
+
+    // ... also call getList every 5 seconds hereafter to update the list
+    window.setInterval(getFollower, 5000);
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "socialnetwork/basewithnav.html" %}
+{% block user-info %}
+<div>
+        <span id="id_logged_in_user_name">
+            {{user.first_name}} {{user.last_name}}
+        </span>
+</div>
+{% endblock %}
+
+{% block page-name %}
+<h1><span id="id_page_name">Profile Page For {{profile.user.first_name}} {{profile.user.last_name}}</span></h1>
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container">
+    <div class="mycontainer_light" style="width: 50rem;">
+    <img id="id_user_picture"
+                 width="600px"
+                 {% load static %}
+                 src="{%static 'media/placeholder.jpg'%}"></img>
+
+        {% if profile.user != user %}
+        <div>
+            <br>
+            <input align="center" class="form-control" readonly align="center" id="id_user_bio"
+                  value="the user hasn't input his biography" >
+            <div>
+                {% if follow_action == 'Follow' %}
+            <form method="POST" action="{% url 'changefollow' profile.user.id %}">
+               {% csrf_token %}
+                <button id="id_follow" type="submit">{{follow_action}}</button>
+            </form>
+                {% else %}
+            <form method="POST" action="{% url 'changefollow' profile.user.id %}">
+               {% csrf_token %}
+                <button id="id_unfollow" type="submit">{{follow_action}}</button>
+            </form>
+            {% endif%}
+
+            </div>
+        </div>
+
+        {% else %}
+        <br>
+        <form enctype="multipart/form-data" method="post" action="{% url 'add-profile'%}">
+            {% for field in profileform.visible_fields %}
+            <div>
+                {{field.label_tag}}
+            </div>
+            <div>
+                {{field}}
+            </div>
+            <div class="error">
+                {% for error in field.errors %} {{error}} {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div>
+                <button id="id_update_profile_button" type="submit">Submit</button>
+            </div>
+            {% csrf_token %}
+        </form>
+
+
+    </div>
+
+    <div class="card-body">
+        <div>
+            <p>You are following:</p>
+            <ul>
+                {% for friend in friends %}
+                <li>
+                    <a href="{% url 'profile' friend.id %}" id="id_profile_link_{{friend.username}}">
+                        {{friend.first_name}} {{friend.last_name}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

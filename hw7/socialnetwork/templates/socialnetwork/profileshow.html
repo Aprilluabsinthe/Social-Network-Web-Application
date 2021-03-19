@@ -1,0 +1,89 @@
+{% extends "socialnetwork/basewithnav.html" %}
+{% block user-info %}
+<div>
+        <span id="id_logged_in_user_name">
+            {{user.first_name}} {{user.last_name}}
+        </span>
+</div>
+{% endblock %}
+
+{% block page-name %}
+<h1><span id="id_page_name">Profile Page For {{profile.user.first_name}} {{profile.user.last_name}}</span></h1>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    <div style="width: 70%;" class="mycontainer_light" style="width: 50rem;">
+        <img align="center" id="id_user_picture" src="{% url 'photo' profile.id %}" width="200px">
+
+    {% if profile.user != user %}
+        <br>
+        <input align="center" class="form-control-sm" readonly align="center" id="id_user_bio"
+                  value="{{profile.bio}}" >
+        <div>
+            {% if follow_action == 'Follow' %}
+            <form method="POST" action="{% url 'changefollow' profile.user.id%}">
+               {% csrf_token %}
+                <button id="id_follow" type="submit">{{follow_action}}</button>
+            </form>
+            {% else %}
+            <form method="POST" action="{% url 'changefollow' profile.user.id%}">
+               {% csrf_token %}
+                <button id="id_unfollow" type="submit">{{follow_action}}</button>
+            </form>
+            {% endif %}
+
+        </div>
+
+    {% else%}
+        <form enctype="multipart/form-data" method="POST" action="{% url 'edit-profile' user.id %}">
+            <span class="text">
+                {% for field in profileform.visible_fields %}
+            <div>
+                {{field.label_tag}}
+            </div>
+            <div>
+                {{field }}
+            </div>
+            <div class="error">
+                {% for error in field.errors %} {{error}} {% endfor %}
+            </div>
+            {% endfor %}
+            {% csrf_token %}
+            </span>
+            <span class="dark-blue-text">
+            (id={{profile.id}},
+            user={{profile.user}})
+            </span>
+
+            <hr>
+
+            <div>
+                <button id="id_update_profile_button" type="submit">Submit
+                </button>
+            </div>
+            {% csrf_token %}
+
+        </form>
+
+    <div class="card-body">
+        <div>
+            <p>You are following:</p>
+            <ul>
+                {% for friend in friends %}
+                <li>
+                    <a href="{% url 'profile' friend.id %}" id="id_profile_link_{{friend.username}}">
+                        {{friend.first_name}} {{friend.last_name}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif%}
+    </div>
+</div>
+
+{% endblock %}
