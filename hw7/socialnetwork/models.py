@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=255, blank=True)
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='socialnetwork/static/media/')
     friends = models.ManyToManyField("Profile", blank=True)
 
     def __str__(self):
