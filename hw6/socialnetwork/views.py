@@ -508,3 +508,92 @@ def sort_by_time(list, keyname):
         key=lambda x: x[str(keyname)],
         reverse=True
     )
+
+
+def get_global_json(request):
+    response_data = []
+    for model_item in Post.objects.all():
+        my_post = {
+            'post_id': model_item.id,
+            'user': model_item.user.username,
+            'first_name': model_item.user.first_name,
+            'last_name': model_item.user.last_name,
+            'content': model_item.content,
+            'time': model_item.time,
+        }
+        response_data.append(my_post)
+
+    for model_item in Commentship.objects.all():
+        comments = {
+            'mainpost': model_item.mainpost,
+            'mainpost_id': model_item.mainpost.id,
+            'mainuser': model_item.mainpost.user.username,
+            'maincontent': model_item.mainpost.content,
+            'maintime': model_item.mainpost.time,
+            'comment_id': model_item.comment.id,
+            'commentuser': model_item.comment.user.username,
+            'commentuser_firstname': model_item.comment.user.first_name,
+            'commentuser_lastname': model_item.comment.user.last_name,
+            'commentcontent': model_item.comment.content,
+            'commenttime': model_item.comment.time,
+        }
+        response_data.append(comments)
+
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    print(response)
+    return response
+
+def get_follower_json(request):
+    friends = Friendship.objects.filter(user_id=request.user.id)
+    print(friends)
+    seeonly = []
+    if friends.exists():
+        for friend in friends:
+            seeonly.append(friend.friend)
+    print(seeonly)
+    postitems = Post.objects.filter(user__in=seeonly)
+
+    response_data = []
+    for model_item in postitems:
+        follower_post = {
+            'post_id': model_item.id,
+            'user': model_item.user.username,
+            'first_name': model_item.user.first_name,
+            'last_name': model_item.user.last_name,
+            'content': model_item.content,
+            'time': model_item.time,
+        }
+        response_data.append(follower_post)
+
+    comments = Commentship.objects.filter(mainpost__in=postitems)
+    print(comments)
+    for model_item in comments:
+        commments = {
+            'mainpost': model_item.mainpost,
+            'mainpost_id': model_item.mainpost.id,
+            'mainuser': model_item.mainpost.user.username,
+            'maincontent': model_item.mainpost.content,
+            'maintime': model_item.mainpost.time,
+            'comment_id': model_item.comment.id,
+            'commentuser': model_item.comment.user.username,
+            'commentuser_firstname': model_item.comment.user.first_name,
+            'commentuser_lastname': model_item.comment.user.last_name,
+            'commentcontent': model_item.comment.content,
+            'commenttime': model_item.comment.time,
+        }
+        response_data.append(commments)
+
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    print(response)
+    return response
+
+    response_data.sort(key=lambda x: x["time"], reverse=False)
+    response_json = json.dumps(response_data, cls=DateTimeEncoder)
+    response = HttpResponse(response_json, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    print(response)
+    return response

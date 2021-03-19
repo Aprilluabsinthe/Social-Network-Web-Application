@@ -2,7 +2,7 @@
 
 function getGlobal() {
     $.ajax({
-        url: "/socialnetwork/get-global",
+        url: "/socialnetwork/get-global-post",
         dataType : "json",
         success:  function (response) {
             updatePage(response,0)// global
@@ -13,7 +13,7 @@ function getGlobal() {
 
 function getFollower() {
     $.ajax({
-        url: "/socialnetwork/get-follower",
+        url: "/socialnetwork/get-follower-post",
         dataType : "json",
         success: function (response) {
             console.log(response)
@@ -218,26 +218,6 @@ function updateComment(comments,post_id,page) {
     })
 }
 
-// function addPost() {
-//     let itemTextElement = $("#id_post_input_text")
-//     let itemTextValue   = itemTextElement.val()
-//     alert(itemTextValue)
-//
-//     // Clear input box and old error message (if any)
-//     itemTextElement.val('')
-//     displayError('');
-//
-//     $.ajax({
-//         url: "/socialnetwork/makepost",
-//         type: "POST",
-//         data: "post="+itemTextValue+"&csrfmiddlewaretoken="+getCSRFToken(),
-//         dataType : "json",
-//         success: function (response) {
-//             updatePage(response,page)
-//         },
-//         error: updateError
-//     });
-// }
 
 function addPost(){
     let postTextElement = document.getElementById("id_post_input_text")
@@ -316,7 +296,7 @@ function sanitize(s) {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
-            .replace(/&#63/g, '&quest;')
+            // .replace(/&#63/g, '&quest;')
 }
 
 function getCSRFToken() {
