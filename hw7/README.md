@@ -14,6 +14,7 @@
       * https://community.spiceworks.com/topic/1398888-getting-dynamically-generated-button-id-with-ajax
       * https://docs.djangoproject.com/en/3.1/topics/db/examples/many_to_one/
       * https://stackoverflow.com/questions/19877968/ajax-post-request-and-string-concatenation
+8) Integrity Statement: I, Di Lu, did not electronically copy any
 source code, in whole or in part, from any source, other than the course
 examples provided to me this semester, when preparing my solution for this
 homework assignment.
