@@ -313,7 +313,7 @@ function getCSRFToken() {
 function parseDateTime(isotime){
     let datetime = new Date(isotime.toString())
     var amOrPm = (datetime.getHours() < 12) ? "AM" : "PM";
-    var hour = (datetime.getHours() < 12) ? datetime.getHours() : datetime.getHours() - 12;
+    var hour = (datetime.getHours() < 13) ? datetime.getHours() : datetime.getHours() - 12;
     let datetimestring = datetime.getMonth()+1 + '/' + datetime.getDate() + '/' + datetime.getFullYear() + ' ' + hour + ':' + datetime.getMinutes() + ' ' + amOrPm;
     return datetimestring
 }
